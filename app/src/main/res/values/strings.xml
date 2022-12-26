@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">WordPro</string>
+    <string-array name="category">
+        <item>movie/drama</item>
+        <item>music</item>
+        <item>news/column</item>
+        <item>book</item>
+        <item>concert/interview</item>
+    </string-array>
+    <string-array name="language">
+        <item>korean</item>
+        <item>english</item>
+    </string-array>
+</resources>

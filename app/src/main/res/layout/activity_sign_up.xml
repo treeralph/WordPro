@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignUpActivity"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/SignUpActivityMainLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="e-mail: "
+                android:textSize="22dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/main_font_bold"
+                android:layout_weight="3"/>
+            <EditText
+                android:id="@+id/SignUpActivityEmailEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="enter your e-mail"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/black"
+                android:textSize="22dp"
+                android:fontFamily="@font/main_font_bold"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="password: "
+                android:textSize="22dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/main_font_bold"
+                android:layout_weight="3"/>
+            <EditText
+                android:id="@+id/SignUpActivityPasswordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="enter your password"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/black"
+                android:textSize="22dp"
+                android:fontFamily="@font/main_font_bold"
+                android:gravity="center"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="pw check: "
+                android:textSize="22dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/main_font_bold"
+                android:layout_weight="3"/>
+            <EditText
+                android:id="@+id/SignUpActivityRePasswordEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="enter your password again"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/black"
+                android:textSize="22dp"
+                android:fontFamily="@font/main_font_bold"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="nickname: "
+                android:textSize="22dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/main_font_bold"
+                android:layout_weight="3"/>
+            <EditText
+                android:id="@+id/SignUpActivityNicknameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="enter your nickname"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/black"
+                android:textSize="22dp"
+                android:fontFamily="@font/main_font_bold"
+                android:gravity="center"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/SignUpActivitySignUpButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Sign Up"
+            android:textColor="@color/black"
+            android:textSize="30dp"
+            android:fontFamily="@font/main_font_bold"
+            android:background="@color/grey"/>
+        <TextView
+            android:id="@+id/SignUpActivityConfirmStatusTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:visibility="invisible"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:fontFamily="@font/main_font_bold"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="code: "
+                android:textSize="22dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/main_font_bold"
+                android:layout_weight="3"/>
+            <EditText
+                android:id="@+id/SignUpActivityEmailConfirmCodeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="code"
+                android:textColorHint="@color/grey"
+                android:textColor="@color/black"
+                android:textSize="22dp"
+                android:fontFamily="@font/main_font_bold"
+                android:gravity="center"/>
+        </LinearLayout>
+        <TextView
+            android:id="@+id/SignUpActivityConfirmUserButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Confirm"
+            android:textColor="@color/black"
+            android:textSize="30dp"
+            android:fontFamily="@font/main_font_bold"
+            android:background="@color/grey"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

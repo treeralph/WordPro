@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/itemSharedLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/itemSharedContentTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Content Title"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/main_font_bold"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/itemSharedContentCategoryTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Content Category"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/main_font"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/itemSharedTimeTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2020-03-17"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/main_font" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/itemSharedNicknameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nickname"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/main_font"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/itemSharedDownloadsNumTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Downloads num"
+                android:textSize="16dp"
+                android:textColor="@color/black"
+                android:fontFamily="@font/main_font" />
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

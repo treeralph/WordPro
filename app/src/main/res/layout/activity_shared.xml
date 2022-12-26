@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SharedActivity"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="30dp"
+        android:orientation="vertical">
+
+        <!-- top bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <EditText
+                android:id="@+id/SharedActivitySearchEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/black"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:hint="Search"
+                android:textColorHint="@color/grey"
+                android:fontFamily="@font/main_font_bold"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/SharedActivitySearchButton"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:src="@drawable/search"/>
+
+        </LinearLayout>
+
+        <!-- main content -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/SharedActivityRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/SharedActivityAddContentButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginRight="10dp"
+        app:cardCornerRadius="50dp"
+        app:cardBackgroundColor="@color/yellow">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="add"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            android:fontFamily="@font/main_font_bold"
+            android:gravity="center"/>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

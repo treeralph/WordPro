@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/transparent">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:contentPadding="5dp"
+        app:cardBackgroundColor="@color/transparent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/itemUserSentenceSentenceTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hi, my name is jun. Hi, my name is jun. Hi, my name is jun. "
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:fontFamily="@font/main_font_bold"
+                android:bufferType="spannable"
+                android:maxLines="1"
+                android:ellipsize="end"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <TextView
+                    android:id="@+id/itemUserSentenceSentenceCategoryTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:fontFamily="@font/main_font"/>
+
+                <TextView
+                    android:id="@+id/itemUserSentenceSentenceTimeTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="2022-03-17"
+                    android:textColor="@color/black"
+                    android:textSize="16dp"
+                    android:fontFamily="@font/main_font"/>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</RelativeLayout>

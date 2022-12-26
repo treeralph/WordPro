@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ContentActivity"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="100dp"
+                android:layout_height="100dp">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Image"
+                    android:textSize="20dp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/main_font_bold"
+                    android:gravity="center"
+                    android:background="@color/yellow"/>
+                <ImageView
+                    android:id="@+id/ContentActivityImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"/>
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="20dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/ContentActivityTitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Title"
+                    android:textSize="22dp"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/main_font_bold"
+                    android:layout_weight="1"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/ContentActivityNicknameTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nickname"
+                        android:textSize="17dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/main_font_bold"
+                        android:layout_weight="1"/>
+
+                    <TextView
+                        android:id="@+id/ContentActivityDownloadButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Download"
+                        android:textSize="17dp"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/main_font_bold"
+                        android:gravity="center"
+                        android:layout_weight="1.8"
+                        android:background="@color/yellow"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/ContentActivityFromLanguageTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="English"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:fontFamily="@font/main_font_bold"/>
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_gravity="center"
+                android:src="@drawable/arrow"/>
+
+            <TextView
+                android:id="@+id/ContentActivityToLanguageTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="한국어"
+                android:textColor="@color/black"
+                android:textSize="16dp"
+                android:fontFamily="@font/main_font_bold"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical"
+            android:background="@color/yellow">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ContentActivityRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</RelativeLayout>

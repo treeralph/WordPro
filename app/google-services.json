@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "164882779617",
+    "project_id": "wordpro-f1384",
+    "storage_bucket": "wordpro-f1384.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:164882779617:android:8d4e950342344d049916a0",
+        "android_client_info": {
+          "package_name": "com.example.wordpro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "164882779617-onil5r0d075g8pim1l5nf3u11j6m0bfd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.wordpro",
+            "certificate_hash": "bc10bf93a509cf51e4d91cd7560e27d6f0a99315"
+          }
+        },
+        {
+          "client_id": "164882779617-eqlmdjbepoh3hak5pfq9qkvrt7s1ktrm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCf7orWq7szTB95jm_UnaHCEQ0jSl_pMSs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "164882779617-eqlmdjbepoh3hak5pfq9qkvrt7s1ktrm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

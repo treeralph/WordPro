@@ -11,6 +11,9 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -20,12 +23,13 @@ import android.widget.Toast;
 import com.example.wordpro.Adapter.NicknameRecyclerViewAdapter;
 import com.example.wordpro.Adapter.SelectDialogRecyclerViewAdapter;
 import com.example.wordpro.Adapter.UserSentenceRecyclerViewAdapter;
-import com.example.wordpro.Adapter.WordSelectRecyclerViewAdapter;
 import com.example.wordpro.database.AppDatabase;
 import com.example.wordpro.database.Sentence;
-import com.example.wordpro.database.TeamMate;
+import com.example.wordpro.rds.RdsConnect;
+import com.example.wordpro.rds.dataRequest.InsertQuery;
 import com.example.wordpro.tool.Callback;
-import com.example.wordpro.tool.RdsConnection;
+
+import org.json.JSONArray;
 
 import java.util.List;
 
@@ -42,12 +46,16 @@ public class MakeTeamActivity extends AppCompatActivity {
     TextView pathTotalNumTextView;
     CardView makeButton;
 
-    UserSentenceRecyclerViewAdapter pathExampleAdapter;
+    // UserSentenceRecyclerViewAdapter pathExampleAdapter;
     NicknameRecyclerViewAdapter nicknameAdapter;
 
     AppDatabase db;
 
-    RdsConnection rdsConnection;
+    RdsConnect rdsConnect;
+
+    Handler handler;
+
+    private int ACTIVITY_TERMINATE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +63,16 @@ public class MakeTeamActivity extends AppCompatActivity {
         setContentView(R.layout.activity_make_team);
 
         activityViewInitializer();
+
+        handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+                if(msg.what == ACTIVITY_TERMINATE){
+                    finish();
+                }
+                return false;
+            }
+        });
     }
 
     private void activityViewInitializer(){
@@ -72,6 +90,8 @@ public class MakeTeamActivity extends AppCompatActivity {
         pathExampleRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         db = AppDatabase.getDBInstance(this);
+
+        rdsConnect = new RdsConnect();
 
         nicknameAdapter = new NicknameRecyclerViewAdapter();
         nicknameRecyclerView.setAdapter(nicknameAdapter);
@@ -100,7 +120,8 @@ public class MakeTeamActivity extends AppCompatActivity {
                                 int totalNum = sentences.size();
 
                                 if(totalNum >= 10) {
-                                    pathExampleAdapter = new UserSentenceRecyclerViewAdapter(sentences.subList(0, 5));
+                                    UserSentenceRecyclerViewAdapter pathExampleAdapter = new UserSentenceRecyclerViewAdapter(sentences.subList(0, 5));
+                                    pathExampleRecyclerView.setAdapter(pathExampleAdapter);
                                     pathTotalNumTextView.setText("There exist " + String.valueOf(totalNum-5) + " more sentences");
                                 }else{
                                     Toast.makeText(MakeTeamActivity.this, "At least, the number of sentences is bigger than 10", Toast.LENGTH_LONG).show();
@@ -118,11 +139,61 @@ public class MakeTeamActivity extends AppCompatActivity {
         makeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // todo: make request to server.
+
+                makeTeam();
 
 
             }
         });
+    }
+
+    public void makeTeam(){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String nicknames = "";
+                for(String nickname: nicknameAdapter.getDataList()){
+                    nicknames += nickname + "/";
+                }
+
+                JSONArray jsonArray = new JSONArray();
+                try {
+                    InsertQuery insertQuery = new InsertQuery(new InsertQuery.TeamsBuilder(
+                            teamNameEditText.getText().toString(),
+                            nicknames,
+                            choosePathButton.getText().toString()
+                    ));
+                    jsonArray.put(insertQuery.toString());
+
+                    List<Sentence> sentences = db.sentenceDao().getSentencesWithPath(choosePathButton.getText().toString());
+                    for(int i=0; i<sentences.size(); i++) {
+                        Sentence sentence = sentences.get(i);
+                        InsertQuery tempInsertQuery = new InsertQuery(new InsertQuery.SentencesBuilder(
+                                sentence.sentence,
+                                sentence.word,
+                                sentence.word_index,
+                                sentence.cheat_sheet,
+                                sentence.path,
+                                "teams/" + teamNameEditText.getText().toString()
+                        ));
+                        jsonArray.put(tempInsertQuery.toString());
+                    }
+                    rdsConnect.requestPost(jsonArray, new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                            String response = (String) object;
+                            Log.d(TAG, "Make Team Response: " + response);
+                            Message message = handler.obtainMessage();
+                            message.what = ACTIVITY_TERMINATE;
+                            handler.sendMessage(message);
+                        }
+                    });
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
     }
 
     public class ChoosePathDialog extends Dialog{

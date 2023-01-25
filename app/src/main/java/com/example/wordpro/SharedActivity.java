@@ -14,8 +14,6 @@ import android.widget.ImageView;
 import com.example.wordpro.Adapter.SharedActivityRecyclerViewAdapter;
 import com.example.wordpro.database.AppDatabase;
 import com.example.wordpro.database.Content;
-import com.example.wordpro.tool.Callback;
-import com.example.wordpro.tool.RdsConnection;
 
 import java.util.List;
 
@@ -27,7 +25,6 @@ public class SharedActivity extends AppCompatActivity {
     CardView addContentButton;
 
     AppDatabase db;
-    RdsConnection rdsConnection;
 
     SharedActivityRecyclerViewAdapter adapter;
 
@@ -51,18 +48,12 @@ public class SharedActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         db = AppDatabase.getDBInstance(this);
-        rdsConnection = new RdsConnection();
 
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String searchStuff = searchEditText.getText().toString();
-                rdsConnection.getContentOfRDS(searchStuff, new Callback() {
-                    @Override
-                    public void OnCallback(Object object) {
 
-                    }
-                });
             }
         });
 

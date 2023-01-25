@@ -34,11 +34,14 @@ public class NicknameRecyclerViewAdapter extends RecyclerView.Adapter<NicknameRe
 
     @Override
     public void onBindViewHolder(@NonNull NicknameViewHolder holder, int position) {
+        String nickname = dataList.get(position);
+        holder.mainTextView.setText(nickname);
         holder.mainCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "remove #" + String.valueOf(position) + " of recyclerView dataList");
-                dataList.remove(position);
+                int currentPosition = holder.getAdapterPosition();
+                Log.d(TAG, "remove #" + String.valueOf(currentPosition) + " of recyclerView dataList");
+                dataList.remove(currentPosition);
                 notifyDataSetChanged();
             }
         });
@@ -62,5 +65,9 @@ public class NicknameRecyclerViewAdapter extends RecyclerView.Adapter<NicknameRe
             mainCardView = itemView.findViewById(R.id.itemWordSelectCardView);
             mainTextView = itemView.findViewById(R.id.itemWordSelectTextView);
         }
+    }
+
+    public List<String> getDataList(){
+        return dataList;
     }
 }

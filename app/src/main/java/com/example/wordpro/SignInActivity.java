@@ -19,6 +19,9 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttribu
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserDetails;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GetDetailsHandler;
+import com.example.wordpro.firebase.FirestoreConnection;
+import com.example.wordpro.firebase.data.Data;
+import com.example.wordpro.firebase.data.User;
 import com.example.wordpro.tool.Callback;
 import com.example.wordpro.tool.Cognito;
 
@@ -44,6 +47,34 @@ public class SignInActivity extends AppCompatActivity {
 
         emailEditText.setText("treeralph@gmail.com");
         pwEditText.setText("!qlqjs940");
+
+        TextView testButton = findViewById(R.id.LoginActivityTestButton);
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(SignInActivity.this, "click!", Toast.LENGTH_LONG).show();
+                FirestoreConnection firestoreConnection = new FirestoreConnection(FirestoreConnection.userDataType);
+                firestoreConnection.write(new User("jun", "abcd", "boo"), "jun");
+            }
+        });
+
+        TextView test2Button = findViewById(R.id.LoginActivityTest2Button);
+        test2Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(SignInActivity.this, "click!", Toast.LENGTH_LONG).show();
+                FirestoreConnection firestoreConnection = new FirestoreConnection(FirestoreConnection.userDataType);
+                firestoreConnection.read("jun", new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        User data = (User) object;
+                        test2Button.setText(data.toString());
+                        test2Button.setTextSize(10);
+                    }
+                });
+            }
+        });
+
 
         signInBtn.setOnClickListener(new View.OnClickListener() {
             @Override

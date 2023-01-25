@@ -4,44 +4,40 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amazonaws.auth.CognitoCachingCredentialsProvider;
-import com.amazonaws.mobile.client.AWSMobileClient;
-import com.amazonaws.mobile.client.UserStateDetails;
-import com.amazonaws.mobile.config.AWSConfiguration;
-import com.amazonaws.mobileconnectors.pinpoint.PinpointConfiguration;
-import com.amazonaws.mobileconnectors.pinpoint.PinpointManager;
-import com.amazonaws.regions.Regions;
 import com.example.wordpro.database.AppDatabase;
 import com.example.wordpro.database.Period;
 import com.example.wordpro.database.Sentence;
 import com.example.wordpro.database.TodaySentence;
+import com.example.wordpro.rds.RdsConnect;
+import com.example.wordpro.rds.dataRequest.DeleteQuery;
+import com.example.wordpro.rds.dataRequest.SelectQuery;
+import com.example.wordpro.rds.dataResponse.SentenceHandler;
 import com.example.wordpro.tool.Callback;
-import com.example.wordpro.tool.RdsConnection;
 import com.example.wordpro.tool.WordDialog;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import org.json.JSONObject;
+import org.json.JSONArray;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -57,13 +53,14 @@ public class MainActivity extends AppCompatActivity {
     FrameLayout addSentenceButton;
     TextView mainTextView;
     TextView indexTextView;
+    TextView downloadStatusTextView;
+    ImageView downloadStatusImageView;
     ImageView redButton;
     ImageView blueButton;
     ImageView blackButton;
     CardView cheatSheetButton;
 
     AppDatabase db;
-    RdsConnection rdsConnection;
 
     List<TodaySentence> sentences;
     int numSentences;
@@ -72,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
     List<Period> periods;
     String uid;
+
+    Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
         sharedButton = findViewById(R.id.MainActivity2SharedActivityButton);
         mainTextView = findViewById(R.id.MainActivityMainTextView);
         indexTextView = findViewById(R.id.MainActivityIndexTextView);
+        downloadStatusTextView = findViewById(R.id.MainActivityDownloadStatusTextView);
+        downloadStatusImageView = findViewById(R.id.MainActivityDownloadStatusImageView);
         addSentenceButton = findViewById(R.id.MainActivity2AddSentenceActivityButton);
         cheatSheetButton = findViewById(R.id.MainActivityCheatSheetButton);
         redButton = findViewById(R.id.MainActivityRedButton);
@@ -90,12 +91,33 @@ public class MainActivity extends AppCompatActivity {
         blackButton = findViewById(R.id.MainActivityBlackButton);
 
         db = AppDatabase.getDBInstance(this);
-        rdsConnection = new RdsConnection();
 
         uid = getIntent().getStringExtra("uid");
 
         checkPeriod();
 
+        handler = new Handler(new Handler.Callback() {
+            @Override
+            public boolean handleMessage(@NonNull Message msg) {
+
+                int flag = msg.what;
+
+                if(flag == 0){
+                    downloadStatusTextView.setText("There are no sentences now.");
+                    downloadStatusImageView.setVisibility(View.INVISIBLE);
+                }else if(flag == 1){
+                    downloadStatusTextView.setText("There are " + String.valueOf(msg.arg1) + " sentences");
+                    downloadStatusImageView.setImageResource(R.drawable.star_filled);
+                }else{
+                    downloadStatusTextView.setText("Raise Exception on Downloading");
+                    downloadStatusImageView.setVisibility(View.INVISIBLE);
+                }
+
+                return false;
+            }
+        });
+
+        /*
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -116,6 +138,103 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         thread.start();
+         */
+        RdsConnect rdsConnect = new RdsConnect();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+                downloadStatusTextView.setText("downloading...");
+                downloadStatusImageView.setVisibility(View.VISIBLE);
+                downloadStatusImageView.startAnimation(animation);
+
+                try {
+                    SelectQuery selectQuery = SelectQuery.builder()
+                            .tableName(RdsConnect.TABLE_SENTENCES).optionField("uid").option("'" + uid + "'")
+                            .build();
+                    Log.d(TAG, "select query: " + selectQuery.toString());
+
+                    DeleteQuery deleteQuery = DeleteQuery.builder()
+                            .tableName(RdsConnect.TABLE_SENTENCES).optionField("uid").option("'" + uid + "'")
+                            .build();
+                    Log.d(TAG, "delete query: " + deleteQuery.toString());
+
+                    JSONArray jsonArray = new JSONArray();
+                    rdsConnect.request(RdsConnect.SELECT, RdsConnect.TABLE_SENTENCES, selectQuery.toString(), jsonArray.toString(), new Callback() {
+                        @Override
+                        public void OnCallback(Object object) {
+                            Sentence[] sentences = SentenceHandler.string2sentences((String) object);
+                            downloadStatusImageView.clearAnimation();
+
+                            if(sentences == null || sentences.length == 0){
+                                Message message = handler.obtainMessage();
+                                message.what = 0;
+                                handler.sendMessage(message);
+                            }else{
+                                Message message = handler.obtainMessage();
+                                message.what = 1;
+                                message.arg1 = sentences.length;
+                                handler.sendMessage(message);
+                                db.sentenceDao().insertSentences(sentences);
+
+                                rdsConnect.request(RdsConnect.DELETE, RdsConnect.TABLE_SENTENCES, deleteQuery.toString(), jsonArray.toString(), new Callback() {
+                                    @Override
+                                    public void OnCallback(Object object) {
+                                        String result = (String) object;
+                                        Log.d(TAG, "DELETE query server result: " + result);
+                                    }
+                                });
+
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Message message = handler.obtainMessage();
+                    message.what = 2;
+                    handler.sendMessage(message);
+                }
+            }
+        });
+        thread.start();
+
+
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
+            @Override
+            public void onSuccess(String s) {
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+
+            }
+        });
+
+        /*
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("FIREBASEMESSAGING", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        String token = task.getResult();
+                        Log.d("FIREBASEMESSAGING", token);
+
+                        FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(ContentsActivity.this, "UserProfile", user.getUid());
+                        firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "DeviceToken", token, new Callback() {
+                            @Override
+                            public void OnCallback(Object object) {
+
+                            }
+                        });
+                    }
+                });
+
+         */
 
         teamButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -337,4 +456,6 @@ public class MainActivity extends AppCompatActivity {
             return fibonacci(n-1) + fibonacci(n-2);
         }
     }
+
+
 }

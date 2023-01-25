@@ -8,6 +8,16 @@
     tools:context=".SignInActivity"
     android:background="@color/white">
 
+    <TextView
+        android:id="@+id/LoginActivityTest2Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:text="READ"
+        android:textSize="30dp"
+        android:textColor="@color/black"
+        android:layout_alignParentRight="true"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -25,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/background"/>
             <TextView
+                android:id="@+id/LoginActivityTestButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

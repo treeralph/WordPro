@@ -33,9 +33,7 @@ dependencies {
     implementation platform('com.google.firebase:firebase-bom:31.1.1')
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
-    //implementation 'com.google.firebase:firebase-core:16.0.1'
-    implementation 'com.amazonaws:aws-android-sdk-pinpoint:2.15.+'
-    implementation 'com.amazonaws:aws-android-sdk-mobile-client:2.57.0'
+    implementation 'com.google.firebase:firebase-firestore'
 
     // room
     implementation "androidx.room:room-runtime:2.4.3"

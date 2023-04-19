@@ -1,11 +1,16 @@
 package com.example.wordpro;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,14 +19,15 @@ import com.example.wordpro.tool.Cognito;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    EditText emailEditText;
-    EditText codeEditText;
-    TextView confirmBtn;
-    EditText passwordEditText;
-    EditText rePasswordEditText;
+    ImageView imageView;
+    EditText idEditText;
+    EditText pwEditText;
+    EditText pwCheckEditText;
     EditText nicknameEditText;
-    TextView confirmStatus;
-    TextView signUpBtn;
+    EditText vcEditText; // Verification Code
+    CardView getVCButton;
+    CardView verifyButton;
+    TextView console;
 
     Cognito authentication;
 
@@ -29,53 +35,81 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-        emailEditText = findViewById(R.id.SignUpActivityEmailEditText);
-        passwordEditText = findViewById(R.id.SignUpActivityPasswordEditText);
-        rePasswordEditText = findViewById(R.id.SignUpActivityRePasswordEditText);
-        nicknameEditText = findViewById(R.id.SignUpActivityNicknameEditText);
-        confirmStatus = findViewById(R.id.SignUpActivityConfirmStatusTextView);
-        signUpBtn = findViewById(R.id.SignUpActivitySignUpButton);
-        codeEditText = findViewById(R.id.SignUpActivityEmailConfirmCodeEditText);
-        confirmBtn = findViewById(R.id.SignUpActivityConfirmUserButton);
+        activityViewInitializer();
+    }
+
+    public void activityViewInitializer(){
+
+        imageView = findViewById(R.id.signUpActivityImageView);
+        idEditText = findViewById(R.id.signUpActivityIdEditText);
+        pwEditText = findViewById(R.id.signUpActivityPwEditText);
+        pwCheckEditText = findViewById(R.id.signUpActivityPwCheckEditText);
+        nicknameEditText = findViewById(R.id.signUpActivityNicknameEditText);
+        vcEditText = findViewById(R.id.signUpActivityVerificationEditText);
+        getVCButton = findViewById(R.id.signUpActivityGetVerificationButton);
+        verifyButton = findViewById(R.id.signUpActivityVerifyButton);
+        console = findViewById(R.id.signUpActivityConsoleTextView);
+
+        imageView.setImageResource(R.drawable.icon_wordpro_v2);
+        imageView.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        imageView.setY(-400);
 
         authentication = new Cognito(getApplicationContext());
 
-        signUpBtn.setOnClickListener(new View.OnClickListener() {
+        getVCButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(passwordEditText.getText().toString().endsWith(rePasswordEditText.getText().toString())){
-                    String email = emailEditText.getText().toString().replace(" ", "");
-                    String nickname = nicknameEditText.getText().toString().replace(" ", "");
+                String id = idEditText.getText().toString().replace(" ", "");
+                String pw = pwEditText.getText().toString().replace(" ", "");
+                String pwCheck = pwCheckEditText.getText().toString().replace(" ", "");
+                String nickname = nicknameEditText.getText().toString().replace(" ", "");
+                if(pw.endsWith(pwCheck)){
                     authentication.addAttribute("nickname", nickname);
-                    authentication.addAttribute("email", email);
-                    authentication.signUpInBackground(nickname, passwordEditText.getText().toString());
-                }
-                else{
-
+                    authentication.addAttribute("email", id);
+                    authentication.signUpInBackground(nickname, pw);
+                } else{
+                    console.setText("Input password correctly");
+                    console.setVisibility(View.VISIBLE);
                 }
             }
         });
 
-        confirmBtn.setOnClickListener(new View.OnClickListener() {
+        verifyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                authentication.confirmUser(nicknameEditText.getText().toString().replace(" ", ""),
-                        codeEditText.getText().toString().replace(" ", ""),
-                        new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-                                int check = (Integer) object;
-                                if(check == Cognito.CONFIRM_SUCCESS){
-                                    setResult(RESULT_OK);
-                                    finish();
-                                }else{
-                                    confirmStatus.setText("code unavailable");
-                                    confirmStatus.setTextColor(Color.RED);
-                                }
-                            }
-                        });
+                String id = idEditText.getText().toString().replace(" ", "");
+                String pw = pwEditText.getText().toString().replace(" ", "");
+                String vc = vcEditText.getText().toString().replace(" ", "");
+                String nickname = nicknameEditText.getText().toString().replace(" ", "");
+                authentication.confirmUser(nickname, vc, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        // Success
+                        /*
+                        Intent intent = new Intent();
+                        intent.putExtra("id", id);
+                        intent.putExtra("pw", pw);
+                        setResult(RESULT_OK, intent);
+
+                         */
+                        finish();
+                    }
+                }, new Callback() {
+                    @Override
+                    public void OnCallback(Object object) {
+                        // Failure
+                        console.setText("code unavailable");
+                    }
+                });
             }
         });
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }

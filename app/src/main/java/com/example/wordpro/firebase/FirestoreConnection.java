@@ -4,8 +4,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.example.wordpro.firebase.data.Data;
-import com.example.wordpro.firebase.data.User;
 import com.example.wordpro.tool.Callback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -29,6 +27,7 @@ public class FirestoreConnection {
         this.dataType = dataType;
     }
 
+    /*
     public void write(Data data, String path) {
         Log.d(TAG, "start to write data into firestore path: " + path + ", " + data.toString());
         DocumentReference ref = db.document(dataType + "/" + path);
@@ -62,4 +61,6 @@ public class FirestoreConnection {
             }
         });
     }
+
+     */
 }

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="@color/blue">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/pageAddTeam2BannerTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="Choose your Sentences"
+            android:textColor="@color/yellow"
+            android:textSize="17dp"
+            android:fontFamily="@font/poppins_light"
+            android:gravity="center" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:orientation="horizontal"
+            android:background="@drawable/under_line_reverse_color">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:src="@drawable/folder"/>
+            <TextView
+                android:id="@+id/pageAddTeam2ChoosePathButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text=" Sentences Path"
+                android:textColor="@color/character_color"
+                android:textSize="17dp"
+                android:fontFamily="@font/poppins_light"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:backgroundTint="@color/transparent"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/pageAddTeam2SentencePathTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="Mathematics"
+            android:textSize="17dp"
+            android:textColor="@color/yellow"
+            android:gravity="center"
+            android:fontFamily="@font/poppins_light"/>
+        <TextView
+            android:id="@+id/pageAddTeam2ConsoleNumTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="There are #23 sentences"
+            android:textSize="13dp"
+            android:textColor="@color/character_color"
+            android:gravity="center"
+            android:fontFamily="@font/poppins_light"/>
+        <TextView
+            android:id="@+id/pageAddTeam2ConsoleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="There are at least #10 sentences to upload"
+            android:textSize="13dp"
+            android:textColor="@color/red"
+            android:gravity="center"
+            android:fontFamily="@font/poppins_light"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/pageAddTeam2RecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="30dp"/>
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <TextView
+            android:id="@+id/pageAddTeam2Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="60dp"
+            android:text="Done"
+            android:textColor="@color/yellow"
+            android:textSize="17dp"
+            android:fontFamily="@font/poppins_light"
+            android:layout_gravity="right"/>
+
+    </LinearLayout>
+
+</LinearLayout>

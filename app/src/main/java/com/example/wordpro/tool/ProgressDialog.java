@@ -25,8 +25,6 @@ public class ProgressDialog extends Dialog {
     public String TAG = "ProgressDialog";
 
     private Context context;
-    private RdsConnection rdsConnection;
-
     private TextView nicknameTextView;
     private LineChart chart;
     private Typeface typeface;
@@ -36,7 +34,6 @@ public class ProgressDialog extends Dialog {
         setContentView(R.layout.dialog_progress);
 
         this.context = context;
-        rdsConnection = new RdsConnection();
 
         chartInitializer();
     }

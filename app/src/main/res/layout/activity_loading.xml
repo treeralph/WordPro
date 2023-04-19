@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoadingActivity"
+    android:background="@color/blue">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/loadingActivityImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:transitionName="loading2signIn"
+            android:src="@drawable/icon_wordpro_v2"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="PPIT"
+            android:textSize="90dp"
+            android:textColor="@color/blue"
+            android:fontFamily="@font/poppins_medium"/>
+
+    </FrameLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="portable memo"
+        android:textSize="20dp"
+        android:textColor="@color/character_color"
+        android:fontFamily="@font/poppins_light"/>
+</RelativeLayout>

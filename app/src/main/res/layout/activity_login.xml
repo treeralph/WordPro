@@ -1,143 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".SignInActivity"
-    android:background="@color/white">
+    android:background="@color/blue">
 
-    <TextView
-        android:id="@+id/LoginActivityTest2Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="20dp"
-        android:text="READ"
-        android:textSize="30dp"
-        android:textColor="@color/black"
-        android:layout_alignParentRight="true"/>
+    <ImageView
+        android:id="@+id/signInActivityImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:transitionName="loadingActivityTransition"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
         android:orientation="vertical">
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:src="@drawable/background"/>
-            <TextView
-                android:id="@+id/LoginActivityTestButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:text="word pro"
-                android:textSize="60dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/main_font_bold"/>
-        </FrameLayout>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
+            android:id="@+id/signInActivityCardView"
+            android:layout_width="300dp"
+            android:layout_height="220dp"
+            android:layout_gravity="center"
+            android:visibility="invisible"
+            app:contentPadding="10dp"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@color/character_color">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/under_line"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/email_icon"/>
+                    <EditText
+                        android:id="@+id/signInActivityIdEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:hint="Enter your email"
+                        android:textColorHint="@color/blue"
+                        android:textColor="@color/blue"
+                        android:textSize="15dp"
+                        android:fontFamily="@font/poppins_light"
+                        android:backgroundTint="@color/transparent"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:background="@drawable/under_line"
+                    android:layout_weight="1">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/password_icon"/>
+                    <EditText
+                        android:id="@+id/signInActivityPwEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:hint="Enter your password"
+                        android:textColorHint="@color/blue"
+                        android:textColor="@color/blue"
+                        android:textSize="15dp"
+                        android:password="true"
+                        android:fontFamily="@font/poppins_light"
+                        android:backgroundTint="@color/transparent"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:orientation="horizontal"
+                    android:layout_weight="2">
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/signInActivitySignInButton"
+                        android:layout_width="100dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        app:cardCornerRadius="10dp"
+                        app:cardBackgroundColor="@color/blue">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Sign In"
+                            android:textSize="18dp"
+                            android:textColor="@color/character_color"
+                            android:fontFamily="@font/poppins_medium"/>
+                    </androidx.cardview.widget.CardView>
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/signInActivitySignUpButton"
+                        android:layout_width="100dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center"
+                        app:cardCornerRadius="10dp"
+                        app:cardBackgroundColor="@color/blue">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text="Sign Up"
+                            android:textSize="18dp"
+                            android:textColor="@color/character_color"
+                            android:fontFamily="@font/poppins_medium"/>
+                    </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/signInActivityConsoleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="e-mail: "
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:fontFamily="@font/main_font_bold"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_weight="3"/>
-            <EditText
-                android:id="@+id/LoginActivityEmailEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="enter your e-mail"
-                android:textColorHint="@color/grey"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:gravity="center"
-                android:fontFamily="@font/main_font_bold"
-                android:layout_weight="1" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="password: "
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:fontFamily="@font/main_font_bold"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_weight="3"/>
-            <EditText
-                android:id="@+id/LoginActivityPasswordEditText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="enter your password"
-                android:textColor="@color/black"
-                android:textColorHint="@color/grey"
-                android:textSize="20dp"
-                android:gravity="center"
-                android:fontFamily="@font/main_font_bold"
-                android:layout_weight="1"
-                android:inputType="textPassword"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/LoginActivitySignInButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:text="Sign In"
-                android:textColor="@color/black"
-                android:textSize="30dp"
-                android:fontFamily="@font/main_font_bold"
-                android:background="@color/grey"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_weight="1"/>
-
-            <TextView
-                android:id="@+id/LoginActivitySignUpButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="Sign Up"
-                android:textColor="@color/black"
-                android:textSize="30dp"
-                android:fontFamily="@font/main_font_bold"
-                android:background="@color/grey"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:layout_weight="1"/>
+            android:layout_marginTop="10dp"
+            android:visibility="invisible"
+            android:text="Input Correctly"
+            android:textSize="17dp"
+            android:textColor="@color/red"
+            android:fontFamily="@font/poppins_light"
+            android:gravity="center"/>
 
 
-        </LinearLayout>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
     </LinearLayout>
-</RelativeLayout>
+
+
+</FrameLayout>

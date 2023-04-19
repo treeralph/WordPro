@@ -27,6 +27,7 @@ public class RdsConnect {
     public static String INSERT = "insert";
     public static String DELETE = "delete";
     public static String SELECT = "select";
+    public static String UPDATE = "update";
 
     public static String TABLE_SENTENCES = "sentences";
     public static String TABLE_TEAMS = "teams";

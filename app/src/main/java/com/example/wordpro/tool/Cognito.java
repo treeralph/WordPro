@@ -1,14 +1,15 @@
 package com.example.wordpro.tool;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
-import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserCodeDeliveryDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserDetails;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserPool;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserSession;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.AuthenticationContinuation;
@@ -17,17 +18,26 @@ import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.Chal
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.continuations.MultiFactorAuthenticationContinuation;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.AuthenticationHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GenericHandler;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GetDetailsHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.SignUpHandler;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cognitoidentityprovider.model.SignUpResult;
-import com.example.wordpro.MainActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.Map;
 
 public class Cognito {
+
+    public static String TAG = Cognito.class.getName();
 
     public static int CONFIRM_SUCCESS = 0;
     public static int CONFIRM_FAILURE = 1;
 
-    private String TAG = "Cognito";
+    public static int SUCCESS = 3;
+    public static int FAILURE = 4;
+
     // ############################################################# Information about Cognito Pool
     private String poolID = "ap-northeast-2_QT4P2AbO5";
     private String clientID = "6u6g5ojdham6icvkb0v04r4dgu";
@@ -38,27 +48,31 @@ public class Cognito {
     private Context appContext;
     private String userPassword;                        // Used for Login
 
+
     public Cognito(Context context){
         appContext = context;
         userPool = new CognitoUserPool(context, this.poolID, this.clientID, null, this.awsRegion);
         userAttributes = new CognitoUserAttributes();
     }
 
-    public boolean userExist(String userId){
-
-        CognitoUser cognitoUser = userPool.getUser(userId);
-        if(false){
-            // todo: there exists
-            return true;
-        }else{
-            return false;
-        }
-    }
 
     public void signUpInBackground(String userId, String password){
-        userPool.signUpInBackground(userId, password, this.userAttributes, null, signUpCallback);
-        //userPool.signUp(userId, password, this.userAttributes, null, signUpCallback);
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@NonNull Task<String> task) {
+                if(task.isSuccessful()){
+                    String device_token = task.getResult();
+                    Log.i(TAG, "Success to get Device Token from FCM - Token: " + device_token);
+                    addAttribute("custom:device_token", device_token);
+                    userPool.signUpInBackground(userId, password, userAttributes, null, signUpCallback);
+                }else{
+                    // todo: fail to get device token from FCM server. please try again.
+                    Log.e(TAG, "Fail to get device token from FCM - Exception: " + task.getException());
+                }
+            }
+        });
     }
+
 
     SignUpHandler signUpCallback = new SignUpHandler() {
         @Override
@@ -84,19 +98,21 @@ public class Cognito {
         }
     };
 
-    public void confirmUser(String userId, String code, Callback callback){
+    public void confirmUser(String userId, String code, Callback successCallback, Callback failureCallback){
         CognitoUser cognitoUser =  userPool.getUser(userId);
         cognitoUser.confirmSignUpInBackground(code, false, new GenericHandler() {
             @Override
             public void onSuccess() {
-                callback.OnCallback(CONFIRM_SUCCESS);
+                successCallback.OnCallback(CONFIRM_SUCCESS);
             }
 
             @Override
             public void onFailure(Exception exception) {
-                callback.OnCallback(CONFIRM_FAILURE);
+                exception.printStackTrace();
+                failureCallback.OnCallback(CONFIRM_FAILURE);
             }
         });
+
         //cognitoUser.confirmSignUp(code,false, confirmationCallback);
 
     }
@@ -120,16 +136,15 @@ public class Cognito {
         userAttributes.addAttribute(key, value);
     }
 
-    public void userLogin(String userId, String password, Callback callback){
+    public void userLogin(String userId, String password, Callback successCallback, Callback failureCallback){
         CognitoUser cognitoUser =  userPool.getUser(userId);
         this.userPassword = password;
         cognitoUser.getSessionInBackground(new AuthenticationHandler() {
             @Override
             public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
-                Toast.makeText(appContext,"Sign in success", Toast.LENGTH_LONG).show();
-                callback.OnCallback(userSession.getUsername());
+                Log.d(TAG, "Sign in success");
+                successCallback.OnCallback(userSession.getUsername());
             }
-
             @Override
             public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String userId) {
                 // The API needs user sign-in credentials to continue
@@ -139,7 +154,6 @@ public class Cognito {
                 // Allow the sign-in to continue
                 authenticationContinuation.continueTask();
             }
-
             @Override
             public void getMFACode(MultiFactorAuthenticationContinuation continuation) {
                 // Multi-factor authentication is required; get the verification code from user
@@ -147,19 +161,14 @@ public class Cognito {
                 // Allow the sign-in process to continue
                 //multiFactorAuthenticationContinuation.continueTask();
             }
-
             @Override
-            public void authenticationChallenge(ChallengeContinuation continuation) {
-
-            }
-
+            public void authenticationChallenge(ChallengeContinuation continuation) {}
             @Override
             public void onFailure(Exception exception) {
-                // Sign-in failed, check exception for the cause
-                Toast.makeText(appContext,"Sign in Failure", Toast.LENGTH_LONG).show();
+                Log.d(TAG, "Sign in failure");
+                failureCallback.OnCallback(null);
             }
         });
-
     }
 
 
@@ -200,4 +209,25 @@ public class Cognito {
         return userPool.getCurrentUser();
     }
 
+    public void getCurrentUserNickname(Callback callback){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                userPool.getCurrentUser().getDetails(new GetDetailsHandler() {
+                    @Override
+                    public void onSuccess(CognitoUserDetails cognitoUserDetails) {
+                        CognitoUserAttributes cognitoUserAttributes = cognitoUserDetails.getAttributes();
+                        Map<String, String> attributes = cognitoUserAttributes.getAttributes();
+                        Log.i(TAG, "Get Cognito current user detail: Success - " + attributes.toString());
+                        callback.OnCallback(attributes.get("nickname"));
+                    }
+                    @Override
+                    public void onFailure(Exception exception) {
+                        Log.e(TAG, "Get Cognito current user detail: Failure - " + exception.toString());
+                    }
+                });
+            }
+        });
+        thread.start();
+    }
 }

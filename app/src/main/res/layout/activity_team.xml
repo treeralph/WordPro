@@ -1,129 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".TeamActivity"
-    android:background="@color/white">
+    android:orientation="vertical"
+    android:background="@color/blue">
 
     <LinearLayout
+        android:id="@+id/teamActivityLinearLayout"
+        android:transitionName="linearLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:padding="20dp"
+        android:background="@drawable/round_border_rect"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/teamActivityTeamNameTextView"
+            android:transitionName="teamNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="If I die young - The Band Perry"
+            android:textColor="@color/yellow"
+            android:textSize="17dp"
+            android:fontFamily="@font/poppins_light"
+            android:gravity="left"/>
+        <TextView
+            android:id="@+id/teamActivityTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text=""
+            android:textColor="@color/yellow"
+            android:textSize="17dp"
+            android:fontFamily="@font/poppins_light"
+            android:gravity="center"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/teamActivityRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
             android:orientation="horizontal">
 
-            <androidx.cardview.widget.CardView
-                android:id="@+id/TeamActivityMakeTeamStudyButton"
+            <TextView
+                android:id="@+id/teamActivityNumSentTextView"
+                android:transitionName="numSentTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                app:contentPadding="1.5dp"
-                app:cardCornerRadius="15dp"
-                app:cardBackgroundColor="@color/black">
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:contentPadding="5dp"
-                    app:cardCornerRadius="14dp"
-                    app:cardBackgroundColor="@color/grey">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Make Team"
-                            android:textColor="@color/black"
-                            android:textSize="20dp"
-                            android:fontFamily="@font/main_font_bold"
-                            android:gravity="right"/>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-            </androidx.cardview.widget.CardView>
-
+                android:text="#23 sentences"
+                android:textColor="@color/character_color"
+                android:textSize="17dp"
+                android:fontFamily="@font/poppins_light"/>
             <View
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/TeamActivityChooseTeamStudyButton"
+            <TextView
+                android:id="@+id/teamActivityFromNameTextView"
+                android:transitionName="fromNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:contentPadding="1.5dp"
-                app:cardCornerRadius="15dp"
-                app:cardBackgroundColor="@color/black">
-                <androidx.cardview.widget.CardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:contentPadding="5dp"
-                    app:cardCornerRadius="14dp"
-                    app:cardBackgroundColor="@color/grey">
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:orientation="horizontal">
-                        <TextView
-                            android:id="@+id/TeamActivityTeamStudyNameTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Team Name"
-                            android:textColor="@color/black"
-                            android:textSize="20dp"
-                            android:fontFamily="@font/main_font_bold"
-                            android:gravity="right"/>
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginLeft="5dp"
-                            android:src="@drawable/southern_arrow"
-                            android:layout_gravity="bottom"/>
-                    </LinearLayout>
-                </androidx.cardview.widget.CardView>
-            </androidx.cardview.widget.CardView>
+                android:text="from. jun"
+                android:textColor="@color/character_color"
+                android:textSize="17dp"
+                android:fontFamily="@font/poppins_light"/>
 
         </LinearLayout>
 
-
-
-
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:text="TEAM STUDY PROGRESS"
-            android:textColor="@color/black"
-            android:textSize="30dp"
-            android:fontFamily="@font/main_font_bold"
-            android:gravity="center"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/TeamActivityRecyclerView"
-            android:layout_marginTop="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            tools:listitem="@layout/item_team_study"/>
-
-
     </LinearLayout>
 
-</RelativeLayout>
+
+</LinearLayout>

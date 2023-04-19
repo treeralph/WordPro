@@ -34,9 +34,18 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging'
     implementation 'com.google.android.gms:play-services-auth:15.0.1'
     implementation 'com.google.firebase:firebase-firestore'
+    implementation 'com.google.firebase:firebase-analytics'
+
+    // viewpager2 & dotsIndicator
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    implementation("com.tbuonomo:dotsindicator:4.3")
+
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
     // room
     implementation "androidx.room:room-runtime:2.4.3"
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     annotationProcessor "androidx.room:room-compiler:2.4.3"
     // slidr
     implementation 'com.r0adkll:slidableactivity:2.1.0'

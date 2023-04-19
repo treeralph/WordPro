@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/blue">
+
+    <EditText
+        android:id="@+id/pageAddSentence3EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_centerVertical="true"
+        android:hint=" Input Sentence Category"
+        android:textColorHint="@color/character_color"
+        android:textColor="@color/character_color"
+        android:textSize="17dp"
+        android:textCursorDrawable="@drawable/edit_text_cursor"
+        android:fontFamily="@font/poppins_light"
+        android:backgroundTint="@color/transparent"
+        android:gravity="center"/>
+
+    <TextView
+        android:id="@+id/pageAddSentence3Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="60dp"
+        android:text="Done"
+        android:textColor="@color/yellow"
+        android:textSize="17dp"
+        android:fontFamily="@font/poppins_light"
+        android:layout_gravity="right"/>
+
+
+
+</RelativeLayout>

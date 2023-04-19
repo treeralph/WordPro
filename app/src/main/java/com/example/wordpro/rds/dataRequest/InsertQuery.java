@@ -61,6 +61,9 @@ public class InsertQuery {
         private String cheat_sheet;
         private String path;
         private String uid;
+        private String permission;
+        private String team_identifier;
+        private boolean isPermission = false;
 
         public SentencesBuilder(String sentence, String word, String word_index, String cheat_sheet, String path, String uid) {
             this.sentence = sentence;
@@ -70,15 +73,40 @@ public class InsertQuery {
             this.path = path;
             this.uid = uid;
         }
+
+        public SentencesBuilder(String sentence, String word, String word_index, String cheat_sheet, String path, String uid, String permission, String team_identifier) {
+            this.sentence = sentence;
+            this.word = word;
+            this.word_index = word_index;
+            this.cheat_sheet = cheat_sheet;
+            this.path = path;
+            this.uid = uid;
+            this.team_identifier = team_identifier;
+            this.permission = permission;
+            isPermission = true;
+        }
+
         @Override
         public String toString() {
-            return "insert into sentences(sentence, word, word_index, cheat_sheet, path, uid) values('" +
-                    sentence + "', '" +
-                    word + "', '" +
-                    word_index + "', '" +
-                    cheat_sheet + "', '" +
-                    path + "', '" +
-                    uid + "')";
+            if(isPermission){
+                return "insert into sentences(sentence, word, word_index, cheat_sheet, path, uid) values('" +
+                        sentence + "', '" +
+                        word + "', '" +
+                        word_index + "', '" +
+                        cheat_sheet + "', '" +
+                        path + "', '" +
+                        uid + "', '" +
+                        permission + "', '" +
+                        team_identifier + "')";
+            }else{
+                return "insert into sentences(sentence, word, word_index, cheat_sheet, path, uid) values('" +
+                        sentence + "', '" +
+                        word + "', '" +
+                        word_index + "', '" +
+                        cheat_sheet + "', '" +
+                        path + "', '" +
+                        uid + "')";
+            }
         }
     }
 }

@@ -6,257 +6,232 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@color/white">
+    android:background="@color/blue">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/MainActivity2UserSentenceActivityButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Mine"
-                android:textSize="30dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/main_font_bold"/>
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <TextView
-                android:id="@+id/MainActivity2TeamActivityButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Team"
-                android:textSize="30dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/main_font_bold"/>
-
-            <TextView
-                android:id="@+id/MainActivity2SharedActivityButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="Shared"
-                android:textSize="30dp"
-                android:textColor="@color/black"
-                android:fontFamily="@font/main_font_bold"/>
-        </LinearLayout>
-
-
-        <!-- menu -->
-        <!--
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
-
-            <ImageView
-
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/plus"/>
-
-            <ImageView
-                android:id="@+id/MainActivityMenuButton"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center"
-                android:src="@drawable/menu_bar"/>
-
-        </LinearLayout>
-        -->
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/MainActivityDownloadStatusTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:fontFamily="@font/main_font"
-                android:text=""
-                android:textSize="20dp"
-                android:textColor="@color/black"/>
-
-            <ImageView
-                android:id="@+id/MainActivityDownloadStatusImageView"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="5dp"
-                android:visibility="invisible"
-                android:layout_gravity="center"
-                android:src="@drawable/star_blank"/>
-
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/MainActivityIndexTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="@font/main_font"
-            android:text="There are no sentences on today."
-            android:textSize="20dp"
-            android:textColor="@color/black"/>
-
-        <!-- content -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:orientation="vertical">
-            <androidx.cardview.widget.CardView
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:contentPadding="1.5dp"
-                app:cardCornerRadius="12dp"
-                app:cardBackgroundColor="@color/black">
-                <androidx.cardview.widget.CardView
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/MainActivityDownloadStatusTextView"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:contentPadding="10dp"
-                    app:cardCornerRadius="10dp"
-                    app:cardBackgroundColor="@color/white">
-                    <LinearLayout
+                    android:layout_height="wrap_content"
+                    android:text="There are 12 downloaded sentences."
+                    android:textColor="@color/yellow"
+                    android:textSize="15dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center"
+                    android:layout_gravity="bottom"/>
+                <ImageView
+                    android:id="@+id/MainActivityDownloadStatusImageView"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="invisible"
+                    android:layout_gravity="center"
+                    android:src="@drawable/star_blank"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:background="@color/transparent">
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    app:contentPadding="8dp"
+                    android:layout_gravity="center"
+                    app:cardCornerRadius="20dp"
+                    app:cardBackgroundColor="@color/dark_blue">
+
+                    <TextView
+                        android:id="@+id/MainActivityIndexTextView"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                            <View
-                                android:layout_width="0dp"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"/>
+                        android:layout_height="wrap_content"
+                        android:text="#3 sentence of 21"
+                        android:textColor="@color/character_color"
+                        android:textSize="17dp"
+                        android:gravity="center"
+                        android:fontFamily="@font/poppins_light"/>
 
-                            <androidx.cardview.widget.CardView
-                                android:id="@+id/MainActivityCheatSheetButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginRight="5dp"
-                                app:cardCornerRadius="20dp"
-                                app:contentPadding="8dp"
-                                app:cardBackgroundColor="@color/red">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Cheat Sheet"
-                                    android:textColor="@color/black"
-                                    android:textSize="16dp"
-                                    android:fontFamily="@font/main_font_bold"/>
-
-
-                            </androidx.cardview.widget.CardView>
-
-                        </LinearLayout>
-                        <TextView
-                            android:id="@+id/MainActivityMainTextView"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="EXAMPLE"
-                            android:textColor="@color/black"
-                            android:bufferType="spannable"
-                            android:textSize="20dp"
-                            android:fontFamily="@font/main_font_bold"
-                            android:layout_weight="1"/>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="20dp"
-                            android:layout_marginTop="10dp"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:id="@+id/MainActivityRedButton"
-                                android:layout_width="55dp"
-                                android:layout_height="55dp"
-                                android:src="@drawable/red_check"
-                                android:layout_weight="1"/>
-
-                            <ImageView
-                                android:id="@+id/MainActivityBlueButton"
-                                android:layout_width="55dp"
-                                android:layout_height="55dp"
-                                android:src="@drawable/blue_check"
-                                android:layout_weight="1"/>
-                            <ImageView
-                                android:id="@+id/MainActivityBlackButton"
-                                android:layout_width="55dp"
-                                android:layout_height="55dp"
-                                android:src="@drawable/black_check"
-                                android:layout_weight="1"/>
-                        </LinearLayout>
-                    </LinearLayout>
                 </androidx.cardview.widget.CardView>
-            </androidx.cardview.widget.CardView>
+
+
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <FrameLayout
-            android:id="@+id/MainActivity2AddSentenceActivityButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/background3"/>
+            android:layout_height="0dp"
+            android:layout_weight="3">
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="23dp"
-                    android:layout_height="23dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/plus"/>
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/MainActivityMainTextView"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="add sentence"
-                    android:textSize="30dp"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/main_font_bold"
+                    android:layout_weight="10"
+                    android:bufferType="spannable"
+                    android:text="You can get medical and food service at your doorsteps and also anyone can donate some fund for covid patients."
+                    android:textColor="@color/character_color"
+                    android:textSize="17dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center"
                     android:layout_gravity="center"/>
-
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
             </LinearLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/MainActivityRightMenuRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
         </FrameLayout>
-    </LinearLayout>
 
+
+        <LinearLayout
+            android:id="@+id/MainActivityResultLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:splitMotionEvents="true">
+
+                <!-- todo: 이것 까지 바꿨다. 여기서 부터 하면 됩니다. -->
+                <LinearLayout
+                    android:id="@+id/MainActivityTouchLinearLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:orientation="horizontal"
+                    android:clickable="true">
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/MainActivityBlackButton"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        app:contentPadding="5dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardBackgroundColor="@color/light_blue">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="A"
+                            android:textColor="@color/blue"
+                            android:textSize="30dp"
+                            android:fontFamily="@font/poppins_light"
+                            android:gravity="center"
+                            android:layout_gravity="center"/>
+                    </androidx.cardview.widget.CardView>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/MainActivityBlueButton"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        app:contentPadding="5dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardBackgroundColor="@color/light_blue">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="B"
+                            android:textColor="@color/blue"
+                            android:textSize="30dp"
+                            android:fontFamily="@font/poppins_light"
+                            android:gravity="center"
+                            android:layout_gravity="center"/>
+                    </androidx.cardview.widget.CardView>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/MainActivityRedButton"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        app:contentPadding="5dp"
+                        app:cardCornerRadius="20dp"
+                        app:cardBackgroundColor="@color/light_blue">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="C"
+                            android:textColor="@color/blue"
+                            android:textSize="30dp"
+                            android:fontFamily="@font/poppins_light"
+                            android:gravity="center"
+                            android:layout_gravity="center"/>
+                    </androidx.cardview.widget.CardView>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
+
+                </LinearLayout>
+
+                <com.example.wordpro.view.BottomMenuRecyclerView
+                    android:id="@+id/MainActivityBottomMenuRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    android:clickable="true"/>
+
+            </FrameLayout>
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

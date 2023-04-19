@@ -3,6 +3,8 @@ package com.example.wordpro;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -13,27 +15,43 @@ import android.os.Message;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserAttributes;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserDetails;
+import com.amazonaws.mobileconnectors.cognitoidentityprovider.handlers.GetDetailsHandler;
+import com.example.wordpro.Adapter.BottomMenuRecyclerViewAdapter;
+import com.example.wordpro.Adapter.RightMenuRecyclerViewAdapter;
 import com.example.wordpro.database.AppDatabase;
 import com.example.wordpro.database.Period;
 import com.example.wordpro.database.Sentence;
 import com.example.wordpro.database.TodaySentence;
+import com.example.wordpro.firebase.MyFirebaseMessagingService;
 import com.example.wordpro.rds.RdsConnect;
 import com.example.wordpro.rds.dataRequest.DeleteQuery;
 import com.example.wordpro.rds.dataRequest.SelectQuery;
 import com.example.wordpro.rds.dataResponse.SentenceHandler;
 import com.example.wordpro.tool.Callback;
+import com.example.wordpro.tool.Cognito;
 import com.example.wordpro.tool.WordDialog;
+import com.example.wordpro.view.BottomMenuRecyclerView;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
@@ -47,20 +65,25 @@ public class MainActivity extends AppCompatActivity {
     private static String TAG = "MainActivity";
     private static int ADDSENTENCEACTIVITY_REQUESTCODE = 0;
 
-    TextView userSentenceButton;
-    TextView sharedButton;
-    TextView teamButton;
-    FrameLayout addSentenceButton;
     TextView mainTextView;
     TextView indexTextView;
     TextView downloadStatusTextView;
     ImageView downloadStatusImageView;
-    ImageView redButton;
-    ImageView blueButton;
-    ImageView blackButton;
-    CardView cheatSheetButton;
+    CardView redButton;
+    CardView blueButton;
+    CardView blackButton;
+
+    RecyclerView rightMenuRecyclerView;
+    BottomMenuRecyclerView bottomMenuRecyclerView;
+
+    LinearLayout touchLinearLayout;
+    LinearLayout resultLinearLayout;
+
+    RightMenuRecyclerViewAdapter rightMenuRecyclerViewAdapter;
+    BottomMenuRecyclerViewAdapter bottomMenuRecyclerViewAdapter;
 
     AppDatabase db;
+    RdsConnect rdsConnect;
 
     List<TodaySentence> sentences;
     int numSentences;
@@ -76,32 +99,20 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        teamButton = findViewById(R.id.MainActivity2TeamActivityButton);
-        userSentenceButton = findViewById(R.id.MainActivity2UserSentenceActivityButton);
-        sharedButton = findViewById(R.id.MainActivity2SharedActivityButton);
-        mainTextView = findViewById(R.id.MainActivityMainTextView);
-        indexTextView = findViewById(R.id.MainActivityIndexTextView);
-        downloadStatusTextView = findViewById(R.id.MainActivityDownloadStatusTextView);
-        downloadStatusImageView = findViewById(R.id.MainActivityDownloadStatusImageView);
-        addSentenceButton = findViewById(R.id.MainActivity2AddSentenceActivityButton);
-        cheatSheetButton = findViewById(R.id.MainActivityCheatSheetButton);
-        redButton = findViewById(R.id.MainActivityRedButton);
-        blueButton = findViewById(R.id.MainActivityBlueButton);
-        blackButton = findViewById(R.id.MainActivityBlackButton);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         db = AppDatabase.getDBInstance(this);
-
         uid = getIntent().getStringExtra("uid");
+        rdsConnect = new RdsConnect();
 
         checkPeriod();
+        activityViewInitializer();
+        getSentenceFromServer();
 
         handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
-
                 int flag = msg.what;
-
                 if(flag == 0){
                     downloadStatusTextView.setText("There are no sentences now.");
                     downloadStatusImageView.setVisibility(View.INVISIBLE);
@@ -112,34 +123,207 @@ public class MainActivity extends AppCompatActivity {
                     downloadStatusTextView.setText("Raise Exception on Downloading");
                     downloadStatusImageView.setVisibility(View.INVISIBLE);
                 }
-
                 return false;
             }
         });
+    }
 
-        /*
-        Thread thread = new Thread(new Runnable() {
+    public void activityViewInitializer(){
+
+        mainTextView = findViewById(R.id.MainActivityMainTextView);
+        indexTextView = findViewById(R.id.MainActivityIndexTextView);
+        downloadStatusTextView = findViewById(R.id.MainActivityDownloadStatusTextView);
+        downloadStatusImageView = findViewById(R.id.MainActivityDownloadStatusImageView);
+
+        redButton = findViewById(R.id.MainActivityRedButton);
+        blueButton = findViewById(R.id.MainActivityBlueButton);
+        blackButton = findViewById(R.id.MainActivityBlackButton);
+
+        rightMenuRecyclerView = findViewById(R.id.MainActivityRightMenuRecyclerView);
+        bottomMenuRecyclerView = findViewById(R.id.MainActivityBottomMenuRecyclerView);
+
+        touchLinearLayout = findViewById(R.id.MainActivityTouchLinearLayout);
+        resultLinearLayout = findViewById(R.id.MainActivityResultLinearLayout);
+
+        rightMenuRecyclerViewAdapter = new RightMenuRecyclerViewAdapter(new Callback() {
             @Override
-            public void run() {
-                Log.d(TAG, "thread for connecting rds");
-                // todo: activate download animation
-                rdsConnection.getSentenceOfRDS(uid, new Callback() {
-                    @Override
-                    public void OnCallback(Object object) {
-                        Sentence[] sentences = (Sentence[]) object;
-                        if(sentences.length == 0){
-                            // todo: make download animation invisible, and then show "no sentences updated"
-                        }else {
-                            db.sentenceDao().insertSentences(sentences);
-                            // todo: make download animation invisible, and then show "# sentences updated"
-                        }
-                    }
-                });
+            public void OnCallback(Object object) {
+                RelativeLayout relativeLayout = (RelativeLayout) object;
+
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int height = displayMetrics.heightPixels;
+                int width = displayMetrics.widthPixels;
+
+                relativeLayout.getLayoutParams().width = width - 12;
             }
         });
-        thread.start();
-         */
-        RdsConnect rdsConnect = new RdsConnect();
+
+        bottomMenuRecyclerViewAdapter = new BottomMenuRecyclerViewAdapter(this, BottomMenuRecyclerViewAdapter.MAIN_ACTIVITY, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                RelativeLayout relativeLayout = (RelativeLayout) object;
+
+                DisplayMetrics displayMetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                int height = displayMetrics.heightPixels;
+                int width = displayMetrics.widthPixels;
+
+                relativeLayout.getLayoutParams().height = (height/5-10) - 120;
+
+                Log.e(TAG, "MainActivity getHeight: " + String.valueOf(height));
+
+                FrameLayout frameLayout = new FrameLayout(getApplicationContext()){
+                    @Override
+                    public boolean dispatchTouchEvent(MotionEvent ev) {
+                        Log.e(TAG, "relativeLayout: dispatchTouchEvent: MotionEvent: " + ev.toString());
+                        touchLinearLayout.dispatchTouchEvent(ev);
+                        return super.dispatchTouchEvent(ev);
+                    }
+                    @Override
+                    public boolean onInterceptTouchEvent(MotionEvent ev) {
+                        Log.e(TAG, "relativeLayout: ontInterceptTouchEvent: MotionEvent: " + ev.toString());
+                        return super.onInterceptTouchEvent(ev);
+                    }
+                };
+                frameLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+
+                relativeLayout.addView(frameLayout);
+
+                Log.e(TAG, "MainActivity getLayoutParams().height: " + relativeLayout.getLayoutParams().height);
+            }
+        });
+
+        LinearLayoutManager rightMenuLayoutManager = new LinearLayoutManager(this);
+        rightMenuLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rightMenuRecyclerView.setLayoutManager(rightMenuLayoutManager);
+
+        LinearLayoutManager bottomMenuLayoutManager = new LinearLayoutManager(this);
+        bottomMenuLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        bottomMenuRecyclerView.setLayoutManager(bottomMenuLayoutManager);
+
+        bottomMenuRecyclerView.setCallback(new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                MotionEvent refinedMotionEvent = (MotionEvent) object;
+                touchLinearLayout.dispatchTouchEvent(refinedMotionEvent);
+            }
+        });
+
+        rightMenuRecyclerView.setAdapter(rightMenuRecyclerViewAdapter);
+        bottomMenuRecyclerView.setAdapter(bottomMenuRecyclerViewAdapter);
+
+        redButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "RED_BUTTON clicked");
+                if(progress < numSentences - 1){
+                    clickAction("r");
+                }
+            }
+        });
+
+        blueButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "BLUE_BUTTON clicked");
+                if(progress < numSentences - 1){
+                    clickAction("b");
+                }
+            }
+        });
+
+        blackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e(TAG, "BLACK_BUTTON clicked");
+                if(progress < numSentences - 1){
+                    clickAction("d");
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        Log.i(TAG, "onStart");
+
+        String currentDay = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        List<TodaySentence> todaySentences = db.todaySentenceDao().getAllTodaySentences();
+        if(todaySentences.size() != 0 && todaySentences.get(0).today_register_day.equals(currentDay)){
+
+            Log.i(TAG, "onStart if statement");
+
+            sentences = todaySentences;
+            numSentences = sentences.size();
+            for(int i=0; i<numSentences; i++){
+                TodaySentence todaySentence = sentences.get(i);
+                int check = todaySentence.check;
+                if(check != 0){
+                    progress = i;
+                }
+            }
+            if(progress < numSentences - 1){
+                TodaySentence target = sentences.get(progress+1);
+                mainTextView.setText(target.sentence);
+                Spannable span = (Spannable) mainTextView.getText();
+                String ingredient = target.word_index;
+                for(String ing: ingredient.split("/")){
+                    if(ing.equals("") || ing.isEmpty()){
+                        continue;
+                    }
+                    String[] in = ing.split(",");
+                    int start = Integer.parseInt(in[0]);
+                    int end = Integer.parseInt(in[1]);
+                    span.setSpan(new ForegroundColorSpan(Color.parseColor("#FF6868")), start, end+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                // #n sentence of A
+                indexTextView.setText("#" + String.valueOf(progress+2) + " sentence of "+String.valueOf(numSentences));
+                rightMenuRecyclerViewAdapter.setCheatSheet(target.cheat_sheet);
+            }else{
+                mainTextView.setText("Done!");
+                indexTextView.setText("Complete!");
+            }
+
+        }else{
+
+            Log.i(TAG, "onStart else statement");
+
+            db.todaySentenceDao().deleteAllTodaySentence();
+            List<Sentence> currentSentences = db.sentenceDao().getTodaySentences(currentDay);
+            for(Sentence sentence: currentSentences){
+                TodaySentence todaySentence = new TodaySentence();
+                todaySentence.original_id = sentence.id;
+                todaySentence.today_register_day = currentDay;
+                todaySentence.check = 0;
+                todaySentence.path = sentence.path;
+                todaySentence.sentence = sentence.sentence;
+                todaySentence.word = sentence.word;
+                todaySentence.word_index = sentence.word_index;
+                todaySentence.cheat_sheet = sentence.cheat_sheet;
+                todaySentence.history = sentence.history;
+                todaySentence.register_day = sentence.register_day;
+                todaySentence.next = sentence.next;
+                todaySentence.index = sentence.index;
+                db.todaySentenceDao().insertTodaySentence(todaySentence);
+            }
+
+            if(currentSentences.size() == 0){
+                indexTextView.setText("There are no sentences on today");
+                mainTextView.setText("There are no sentences");
+                Spannable span = (Spannable) mainTextView.getText();
+                int start = 13;
+                int end = 22;
+                span.setSpan(new ForegroundColorSpan(Color.parseColor("#FF6868")), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }else{
+                onStart();
+            }
+        }
+    }
+
+    public void getSentenceFromServer(){
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -185,7 +369,6 @@ public class MainActivity extends AppCompatActivity {
                                         Log.d(TAG, "DELETE query server result: " + result);
                                     }
                                 });
-
                             }
                         }
                     });
@@ -198,196 +381,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         thread.start();
-
-
-        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(new OnSuccessListener<String>() {
-            @Override
-            public void onSuccess(String s) {
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-
-            }
-        });
-
-        /*
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(new OnCompleteListener<String>() {
-                    @Override
-                    public void onComplete(@NonNull Task<String> task) {
-                        if (!task.isSuccessful()) {
-                            Log.w("FIREBASEMESSAGING", "Fetching FCM registration token failed", task.getException());
-                            return;
-                        }
-                        String token = task.getResult();
-                        Log.d("FIREBASEMESSAGING", token);
-
-                        FirestoreManager firestoreManagerForUserProfile = new FirestoreManager(ContentsActivity.this, "UserProfile", user.getUid());
-                        firestoreManagerForUserProfile.update("UserProfile", user.getUid(), "DeviceToken", token, new Callback() {
-                            @Override
-                            public void OnCallback(Object object) {
-
-                            }
-                        });
-                    }
-                });
-
-         */
-
-        teamButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, TeamActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        cheatSheetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    WordDialog wordDialog = new WordDialog(MainActivity.this, sentences.get(progress + 1).cheat_sheet);
-                    wordDialog.setCanceledOnTouchOutside(true);
-                    wordDialog.setCancelable(true);
-                    wordDialog.setCanceledOnTouchOutside(true);
-                    wordDialog.getWindow().setLayout(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT);
-                    wordDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                    wordDialog.show();
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
-        });
-
-        userSentenceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, UserSentenceActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        sharedButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, SharedActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        addSentenceButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, AddSentenceActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        /**
-         * (red/blue/black) button click operates updating the sentence on DB, sentences table.
-         * */
-        redButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(progress < numSentences - 1){
-                    clickAction("r");
-                }
-            }
-        });
-
-        blueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(progress < numSentences - 1){
-                    clickAction("b");
-                }
-            }
-        });
-
-        blackButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(progress < numSentences - 1){
-                    clickAction("d");
-                }
-            }
-        });
-
-
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        Log.i(TAG, "onStart");
-
-        String currentDay = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        List<TodaySentence> todaySentences = db.todaySentenceDao().getAllTodaySentences();
-        if(todaySentences.size() != 0 && todaySentences.get(0).today_register_day.equals(currentDay)){
-
-            Log.i(TAG, "onStart if statement");
-
-            sentences = todaySentences;
-            numSentences = sentences.size();
-            for(int i=0; i<numSentences; i++){
-                TodaySentence todaySentence = sentences.get(i);
-                int check = todaySentence.check;
-                if(check != 0){
-                    progress = i;
-                }
-            }
-            if(progress < numSentences - 1){
-                TodaySentence target = sentences.get(progress+1);
-                mainTextView.setText(target.sentence);
-                Spannable span = (Spannable) mainTextView.getText();
-                String ingredient = target.word_index;
-                for(String ing: ingredient.split("/")){
-                    if(ing.equals("") || ing.isEmpty()){
-                        continue;
-                    }
-                    String[] in = ing.split(",");
-                    int start = Integer.parseInt(in[0]);
-                    int end = Integer.parseInt(in[1]);
-                    span.setSpan(new BackgroundColorSpan(Color.parseColor("#FFBD12")), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-                indexTextView.setText(String.valueOf(progress+2)+"/"+String.valueOf(numSentences));
-            }else{
-                mainTextView.setText("Done!");
-                indexTextView.setText("Complete!");
-            }
-
-        }else{
-
-            Log.i(TAG, "onStart else statement");
-
-            db.todaySentenceDao().deleteAllTodaySentence();
-            List<Sentence> currentSentences = db.sentenceDao().getTodaySentences(currentDay);
-            for(Sentence sentence: currentSentences){
-                TodaySentence todaySentence = new TodaySentence();
-                todaySentence.original_id = sentence.id;
-                todaySentence.today_register_day = currentDay;
-                todaySentence.check = 0;
-                todaySentence.path = sentence.path;
-                todaySentence.sentence = sentence.sentence;
-                todaySentence.word = sentence.word;
-                todaySentence.word_index = sentence.word_index;
-                todaySentence.cheat_sheet = sentence.cheat_sheet;
-                todaySentence.history = sentence.history;
-                todaySentence.register_day = sentence.register_day;
-                todaySentence.next = sentence.next;
-                todaySentence.index = sentence.index;
-                db.todaySentenceDao().insertTodaySentence(todaySentence);
-            }
-            if(currentSentences.size() != 0) {
-                onStart();
-            }
-        }
-    }
 
     public void clickAction(String color){
+
         TodaySentence todaySentence = sentences.get(progress+1);
         todaySentence.check = 1;
         db.todaySentenceDao().updateTodaySentence(todaySentence);
@@ -427,9 +425,10 @@ public class MainActivity extends AppCompatActivity {
                 String[] in = ing.split(",");
                 int start = Integer.parseInt(in[0]);
                 int end = Integer.parseInt(in[1]);
-                span.setSpan(new BackgroundColorSpan(Color.parseColor("#FFBD12")), start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                span.setSpan(new ForegroundColorSpan(Color.parseColor("#FFBD12")), start, end+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-            indexTextView.setText(String.valueOf(progress+2)+"/"+String.valueOf(numSentences));
+            indexTextView.setText("#" + String.valueOf(progress+2) + " sentence of "+String.valueOf(numSentences));
+            rightMenuRecyclerViewAdapter.setCheatSheet(target.cheat_sheet);
         }else{
             mainTextView.setText("Done!");
             indexTextView.setText("Complete!");

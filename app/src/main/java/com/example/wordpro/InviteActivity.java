@@ -23,6 +23,7 @@ import com.example.wordpro.rds.dataRequest.UpdateQuery;
 import com.example.wordpro.tool.Callback;
 import com.google.gson.JsonObject;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
+import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +38,7 @@ public class InviteActivity extends AppCompatActivity {
     private int ACTIVITY_TERMINATE = 0;
 
     ViewPager2 viewPager;
-    DotsIndicator indicator;
+    SpringDotsIndicator indicator;
     InvitationViewPagerAdapter adapter;
     Handler handler;
 
@@ -72,25 +73,22 @@ public class InviteActivity extends AppCompatActivity {
         String teamName = intent.getStringExtra("teamName");
         String makeRequestUser = intent.getStringExtra("makeRequestUser");
 
-        viewPager = findViewById(R.id.InviteActivityViewPager);
-        indicator = findViewById(R.id.InviteActivityViewPager);
+        viewPager = findViewById(R.id.inviteActivityViewPager);
+        indicator = findViewById(R.id.inviteActivityIndicator);
 
         db = AppDatabase.getDBInstance(this);
         List<TeamStudy> teamStudies = db.teamStudyDao().getTeamStudiesPermissionFalse();
-        if(teamStudies.size() > 0) {
-            adapter = new InvitationViewPagerAdapter(this, teamStudies, uid, new Callback() {
-                @Override
-                public void OnCallback(Object object) {
-                    Message message = new Message();
-                    message.what = ACTIVITY_TERMINATE;
-                    handler.sendMessage(message);
-                }
-            });
-        }else{
-            // 초대장 없음.
-            Intent intent2 = new Intent(InviteActivity.this, MainActivity.class);
-            startActivity(intent2);
-            finish();
-        }
+        adapter = new InvitationViewPagerAdapter(this, teamStudies, uid, new Callback() {
+            @Override
+            public void OnCallback(Object object) {
+                Message message = new Message();
+                message.what = ACTIVITY_TERMINATE;
+                handler.sendMessage(message);
+            }
+        });
+
+        viewPager.setAdapter(adapter);
+        indicator.attachTo(viewPager);
     }
+
 }

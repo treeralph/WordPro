@@ -1,57 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".UserSentenceActivity"
-    android:background="@color/white">
+    android:background="@color/blue">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="1">
 
-        <!-- top bar -->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
         <LinearLayout
+            android:id="@+id/userSentenceActivityChoosePathButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/UserSentenceActivitySearchEditText"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:orientation="horizontal"
+            android:background="@drawable/under_line_reverse_color">
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:src="@drawable/folder"/>
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/black"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:hint="Search"
-                android:textColorHint="@color/grey"
-                android:fontFamily="@font/main_font_bold"
-                android:layout_weight="1"/>
-
-            <ImageView
-                android:id="@+id/UserSentenceActivitySearchButton"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_marginTop="3dp"
+                android:text=" Sentences Path"
+                android:textColor="@color/character_color"
+                android:textSize="17dp"
+                android:fontFamily="@font/poppins_light"
                 android:layout_gravity="center"
-                android:src="@drawable/search"/>
-
+                android:layout_weight="1"
+                android:backgroundTint="@color/transparent"/>
         </LinearLayout>
 
-        <!-- main content -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/UserSentenceActivityRecyclerView"
+        <TextView
+            android:id="@+id/userSentenceActivityPathTextView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:listitem="@layout/item_user_sentence"/>
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="Mathematics"
+            android:textSize="17dp"
+            android:textColor="@color/yellow"
+            android:gravity="center"
+            android:fontFamily="@font/poppins_light"/>
+        <TextView
+            android:id="@+id/userSentenceActivityConsoleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="There are #23 sentences"
+            android:textSize="13dp"
+            android:textColor="@color/character_color"
+            android:gravity="center"
+            android:fontFamily="@font/poppins_light"/>
 
-
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="3">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/userSentenceActivityRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="30dp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

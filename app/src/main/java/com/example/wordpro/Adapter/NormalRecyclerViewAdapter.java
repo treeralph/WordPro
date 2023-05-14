@@ -56,8 +56,13 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sentence_for_normal, parent, false);
             return new SentenceViewHolder(itemView);
         }else if(type == NICKNAME){
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_nickname_for_normal, parent, false);
-            return new NicknameViewHolder(itemView);
+            if(viewType == 0) {
+                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_nickname_for_normal, parent, false);
+                return new NicknameViewHolder(itemView);
+            }else{
+                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_nickname_clicked_for_normal, parent, false);
+                return new NicknameClickedViewHolder(itemView);
+            }
         }else if(type == PATH){
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dialog_select, parent, false);
             return new PathViewHolder(itemView);
@@ -96,36 +101,39 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
             }
 
         }else if(type == NICKNAME){
-            NicknameViewHolder nicknameViewHolder = (NicknameViewHolder) holder;
-
             String nickname = (String) dataList.get(currentIndex);
-            nicknameViewHolder.textView.setText(nickname);
-            nicknameViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.e(TAG, "currentIndex: " + String.valueOf(currentIndex));
-                    if(clicked == currentIndex){
-                        clicked = -1;
-                        notifyDataSetChanged();
-                    }else{
-                        clicked = currentIndex;
+
+            if(getItemViewType(holder.getAdapterPosition()) == 0){
+                NicknameViewHolder nicknameViewHolder = (NicknameViewHolder) holder;
+                nicknameViewHolder.textView.setText(nickname);
+                nicknameViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        clicked = holder.getAdapterPosition();
                         notifyDataSetChanged();
                     }
-                }
-            });
-            nicknameViewHolder.cancelImageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dataList.remove(holder.getAdapterPosition());
-                    notifyDataSetChanged();
-                }
-            });
-
-            if(currentIndex == clicked){
-                nicknameViewHolder.textView.setTextColor(context.getResources().getColor(R.color.red));
-                nicknameViewHolder.cardView.setCardBackgroundColor(context.getResources().getColor(R.color.red));
-                nicknameViewHolder.cancelImageView.setVisibility(View.VISIBLE);
+                });
+            }else{
+                NicknameClickedViewHolder nicknameClickedViewHolder = (NicknameClickedViewHolder) holder;
+                nicknameClickedViewHolder.textView.setText(nickname);
+                nicknameClickedViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        clicked = -1;
+                        notifyDataSetChanged();
+                    }
+                });
+                nicknameClickedViewHolder.cancelImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        clicked = -1;
+                        dataList.remove(holder.getAdapterPosition());
+                        notifyDataSetChanged();
+                    }
+                });
             }
+
+
 
         }else if(type == PATH){
             PathViewHolder pathViewHolder = (PathViewHolder) holder;
@@ -161,11 +169,21 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
         notifyDataSetChanged();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if(position == clicked){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
     public boolean addDataWithOutDuplicate(Object object) {
         if(dataList.contains(object)){
             return false;
         }else{
             dataList.add(object);
+            notifyDataSetChanged();
             return true;
         }
     }
@@ -187,12 +205,22 @@ public class NormalRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView
     public class NicknameViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView textView;
-        ImageView cancelImageView;
         public NicknameViewHolder(@NonNull View itemView) {
             super(itemView);
             cardView = itemView.findViewById(R.id.itemNicknameCardView);
             textView = itemView.findViewById(R.id.itemNicknameTextView);
-            cancelImageView = itemView.findViewById(R.id.itemNicknameCancelImageView);
+        }
+    }
+
+    public class NicknameClickedViewHolder extends RecyclerView.ViewHolder {
+        CardView cardView;
+        TextView textView;
+        ImageView cancelImageView;
+        public NicknameClickedViewHolder(@NonNull View itemView) {
+            super(itemView);
+            cardView = itemView.findViewById(R.id.itemNicknameClickedCardView);
+            textView = itemView.findViewById(R.id.itemNicknameClickedTextView);
+            cancelImageView = itemView.findViewById(R.id.itemNicknameClickedCancelImageView);
         }
     }
 

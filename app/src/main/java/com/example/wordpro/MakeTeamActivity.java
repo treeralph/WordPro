@@ -36,6 +36,7 @@ import com.example.wordpro.Adapter.SelectDialogRecyclerViewAdapter;
 import com.example.wordpro.Adapter.UserSentenceRecyclerViewAdapter;
 import com.example.wordpro.database.AppDatabase;
 import com.example.wordpro.database.Sentence;
+import com.example.wordpro.database.TeamStudy;
 import com.example.wordpro.database.User;
 import com.example.wordpro.ec2.EC2RESTApi;
 import com.example.wordpro.rds.RdsConnect;
@@ -105,6 +106,7 @@ public class MakeTeamActivity extends AppCompatActivity {
 
         adapter = new MakeTeamRecyclerViewAdapter(this);
 
+        viewPager.setUserInputEnabled(false);
         viewPager.setAdapter(adapter);
         indicator.attachTo(viewPager);
     }
@@ -166,28 +168,33 @@ public class MakeTeamActivity extends AppCompatActivity {
                                 public void OnCallback(Object object) {
                                     // success callback
                                     User[] users = (User[]) object;
-                                    if (users.length == 0) {
-                                        Log.d(TAG, "The user doesn't exist");
-                                        page1ViewHolder.consoleNicknameTextView.setText(nickname);
-                                        page1ViewHolder.consoleTextView.setText("can't be added");
-                                        page1ViewHolder.consoleNicknameTextView.setTextColor(getResources().getColor(R.color.red));
-                                        page1ViewHolder.consoleTextView.setTextColor(getResources().getColor(R.color.red));
-                                        page1ViewHolder.consoleLayout.setVisibility(View.VISIBLE);
-
-                                    } else {
-                                        if(page1ViewHolder.adapter.addDataWithOutDuplicate(nickname)){
-
+                                    handler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (users.length == 0) {
+                                                Log.d(TAG, "The user doesn't exist");
+                                                page1ViewHolder.consoleNicknameTextView.setText(nickname);
+                                                page1ViewHolder.consoleTextView.setText(" can't be added");
+                                                page1ViewHolder.consoleNicknameTextView.setTextColor(getResources().getColor(R.color.red));
+                                                page1ViewHolder.consoleTextView.setTextColor(getResources().getColor(R.color.red));
+                                                page1ViewHolder.consoleLayout.setVisibility(View.VISIBLE);
+                                            } else {
+                                                if(page1ViewHolder.adapter.addDataWithOutDuplicate(nickname)){
+                                                    page1ViewHolder.consoleNicknameTextView.setText(nickname);
+                                                    page1ViewHolder.consoleTextView.setText(" is added");
+                                                    page1ViewHolder.consoleNicknameTextView.setTextColor(getResources().getColor(R.color.yellow));
+                                                    page1ViewHolder.consoleTextView.setTextColor(getResources().getColor(R.color.yellow));
+                                                    page1ViewHolder.consoleLayout.setVisibility(View.VISIBLE);
+                                                }else {
+                                                    page1ViewHolder.consoleNicknameTextView.setText(nickname);
+                                                    page1ViewHolder.consoleTextView.setText(" already exist");
+                                                    page1ViewHolder.consoleNicknameTextView.setTextColor(getResources().getColor(R.color.red));
+                                                    page1ViewHolder.consoleTextView.setTextColor(getResources().getColor(R.color.red));
+                                                    page1ViewHolder.consoleLayout.setVisibility(View.VISIBLE);
+                                                }
+                                            }
                                         }
-
-
-                                        page1ViewHolder.adapter.addData(users[0].nickname);
-
-                                        page1ViewHolder.consoleNicknameTextView.setText(nickname);
-                                        page1ViewHolder.consoleTextView.setText("is added");
-                                        page1ViewHolder.consoleNicknameTextView.setTextColor(getResources().getColor(R.color.yellow));
-                                        page1ViewHolder.consoleTextView.setTextColor(getResources().getColor(R.color.yellow));
-                                        page1ViewHolder.consoleLayout.setVisibility(View.VISIBLE);
-                                    }
+                                    });
                                 }
                             }, new Callback() {
                                 @Override
@@ -243,7 +250,6 @@ public class MakeTeamActivity extends AppCompatActivity {
                                     // failure callback
                                 }
                             });
-
                         }
                     });
                     break;
@@ -251,6 +257,8 @@ public class MakeTeamActivity extends AppCompatActivity {
                     break;
             }
         }
+
+
 
         @Override
         public int getItemViewType(int position) {
@@ -406,11 +414,6 @@ public class MakeTeamActivity extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-
-                String nicknames = "";
-                for(String nickname: nicknameList){
-                    nicknames += nickname + "/";
-                }
 
                 List<String> sqlQueryList = new ArrayList<>();
                 try {

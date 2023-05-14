@@ -2,6 +2,7 @@ package com.example.wordpro.Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,21 +19,27 @@ import com.example.wordpro.R;
 import com.example.wordpro.TeamListActivity;
 import com.example.wordpro.UserSentenceActivity;
 import com.example.wordpro.tool.Callback;
+import com.example.wordpro.view.VacantLinearLayout;
 
 public class BottomMenuRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     public static int MAIN_ACTIVITY = 0;
     public static int TEAM_LIST_ACTIVITY = 1;
 
+    public String TAG = BottomMenuRecyclerViewAdapter.class.getName();
+
     Context context;
     Callback callback;
 
+    String uid;
+
     int recyclerViewType;
 
-    public BottomMenuRecyclerViewAdapter(Context context, int recyclerViewType, Callback callback) {
+    public BottomMenuRecyclerViewAdapter(Context context, String uid, int recyclerViewType, Callback callback) {
         this.context = context;
         this.callback = callback;
         this.recyclerViewType = recyclerViewType;
+        this.uid = uid;
     }
 
     @NonNull
@@ -44,7 +51,7 @@ public class BottomMenuRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
             return new ViewHolderForMainActivity(itemView);
         }else if(recyclerViewType == TEAM_LIST_ACTIVITY){
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_bottom_menu_for_team_list_activity, parent, false);
-            return new ViewHolderForMakeTeamActivity(itemView);
+            return new ViewHolderForTeamListActivity(itemView);
         }else{
             return null;
         }
@@ -57,14 +64,31 @@ public class BottomMenuRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 ViewHolderForMainActivity viewHolderForMainActivity = (ViewHolderForMainActivity) holder;
                 switch(holder.getAdapterPosition()){
                     case 0:
-                        viewHolderForMainActivity.frameLayout.setVisibility(View.INVISIBLE);
-                        callback.OnCallback(viewHolderForMainActivity.relativeLayout);
+                        viewHolderForMainActivity.relativeLayout.removeAllViews();
+
+                        VacantLinearLayout vacantLinearLayout = new VacantLinearLayout(context);
+                        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT);
+                        vacantLinearLayout.setLayoutParams(params);
+                        vacantLinearLayout.setCallback(callback);
+                        vacantLinearLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.e(TAG, "vacantLinearLayout: clickListener");
+                            }
+                        });
+
+                        vacantLinearLayout.setBackgroundColor(context.getResources().getColor(R.color.transparent));
+                        viewHolderForMainActivity.relativeLayout.addView(vacantLinearLayout);
+
                         break;
                     case 1:
                         viewHolderForMainActivity.addSentenceButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(context, AddSentenceActivity.class);
+                                intent.putExtra("uid", uid);
                                 context.startActivity(intent);
                             }
                         });
@@ -73,6 +97,7 @@ public class BottomMenuRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(context, UserSentenceActivity.class);
+                                intent.putExtra("uid", uid);
                                 context.startActivity(intent);
                             }
                         });
@@ -81,6 +106,7 @@ public class BottomMenuRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(context, TeamListActivity.class);
+                                intent.putExtra("uid", uid);
                                 context.startActivity(intent);
                             }
                         });
@@ -90,17 +116,33 @@ public class BottomMenuRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
                 }
                 break;
             case 1: // TeamListActivity
-                ViewHolderForMakeTeamActivity viewHolderForMakeTeamActivity = (ViewHolderForMakeTeamActivity) holder;
+                ViewHolderForTeamListActivity viewHolderForTeamListActivity = (ViewHolderForTeamListActivity) holder;
                 switch(holder.getAdapterPosition()){
                     case 0:
-                        viewHolderForMakeTeamActivity.frameLayout.setVisibility(View.INVISIBLE);
-                        callback.OnCallback(viewHolderForMakeTeamActivity.relativeLayout);
+                        viewHolderForTeamListActivity.relativeLayout.removeAllViews();
+
+                        VacantLinearLayout vacantLinearLayout = new VacantLinearLayout(context);
+                        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT);
+                        vacantLinearLayout.setLayoutParams(params);
+                        vacantLinearLayout.setCallback(callback);
+                        vacantLinearLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Log.e(TAG, "vacantLinearLayout: clickListener");
+                            }
+                        });
+
+                        vacantLinearLayout.setBackgroundColor(context.getResources().getColor(R.color.transparent));
+                        viewHolderForTeamListActivity.relativeLayout.addView(vacantLinearLayout);
                         break;
                     case 1:
-                        viewHolderForMakeTeamActivity.makeTeamButton.setOnClickListener(new View.OnClickListener() {
+                        viewHolderForTeamListActivity.makeTeamButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Intent intent = new Intent(context, MakeTeamActivity.class);
+                                intent.putExtra("uid", uid);
                                 context.startActivity(intent);
                             }
                         });
@@ -142,11 +184,11 @@ public class BottomMenuRecyclerViewAdapter extends RecyclerView.Adapter<Recycler
         }
     }
 
-    public class ViewHolderForMakeTeamActivity extends RecyclerView.ViewHolder{
+    public class ViewHolderForTeamListActivity extends RecyclerView.ViewHolder{
         RelativeLayout relativeLayout;
         FrameLayout frameLayout;
         LinearLayout makeTeamButton;
-        public ViewHolderForMakeTeamActivity(@NonNull View itemView) {
+        public ViewHolderForTeamListActivity(@NonNull View itemView) {
             super(itemView);
             this.relativeLayout = itemView.findViewById(R.id.itemBottomMenuForTeamListRelativeLayout);
             this.frameLayout = itemView.findViewById(R.id.itemBottomMenuForTeamListFrameLayout);

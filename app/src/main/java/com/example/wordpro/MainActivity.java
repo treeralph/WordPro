@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.CompositePageTransformer;
+import androidx.viewpager2.widget.MarginPageTransformer;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -74,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
     CardView blackButton;
 
     RecyclerView rightMenuRecyclerView;
-    BottomMenuRecyclerView bottomMenuRecyclerView;
 
     LinearLayout touchLinearLayout;
     LinearLayout resultLinearLayout;
@@ -94,6 +96,10 @@ public class MainActivity extends AppCompatActivity {
     String uid;
 
     Handler handler;
+
+    LinearLayout bottomRearLinearLayout;
+
+    ViewPager2 viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,10 +146,12 @@ public class MainActivity extends AppCompatActivity {
         blackButton = findViewById(R.id.MainActivityBlackButton);
 
         rightMenuRecyclerView = findViewById(R.id.MainActivityRightMenuRecyclerView);
-        bottomMenuRecyclerView = findViewById(R.id.MainActivityBottomMenuRecyclerView);
 
         touchLinearLayout = findViewById(R.id.MainActivityTouchLinearLayout);
         resultLinearLayout = findViewById(R.id.MainActivityResultLinearLayout);
+
+        bottomRearLinearLayout = findViewById(R.id.MainActivityBottomRearLinearLayout);
+        viewPager = findViewById(R.id.MainActivityBottomMenuViewPager);
 
         rightMenuRecyclerViewAdapter = new RightMenuRecyclerViewAdapter(new Callback() {
             @Override
@@ -159,59 +167,63 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        bottomMenuRecyclerViewAdapter = new BottomMenuRecyclerViewAdapter(this, BottomMenuRecyclerViewAdapter.MAIN_ACTIVITY, new Callback() {
-            @Override
-            public void OnCallback(Object object) {
-                RelativeLayout relativeLayout = (RelativeLayout) object;
-
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                int height = displayMetrics.heightPixels;
-                int width = displayMetrics.widthPixels;
-
-                relativeLayout.getLayoutParams().height = (height/5-10) - 120;
-
-                Log.e(TAG, "MainActivity getHeight: " + String.valueOf(height));
-
-                FrameLayout frameLayout = new FrameLayout(getApplicationContext()){
-                    @Override
-                    public boolean dispatchTouchEvent(MotionEvent ev) {
-                        Log.e(TAG, "relativeLayout: dispatchTouchEvent: MotionEvent: " + ev.toString());
-                        touchLinearLayout.dispatchTouchEvent(ev);
-                        return super.dispatchTouchEvent(ev);
-                    }
-                    @Override
-                    public boolean onInterceptTouchEvent(MotionEvent ev) {
-                        Log.e(TAG, "relativeLayout: ontInterceptTouchEvent: MotionEvent: " + ev.toString());
-                        return super.onInterceptTouchEvent(ev);
-                    }
-                };
-                frameLayout.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-
-                relativeLayout.addView(frameLayout);
-
-                Log.e(TAG, "MainActivity getLayoutParams().height: " + relativeLayout.getLayoutParams().height);
-            }
-        });
-
         LinearLayoutManager rightMenuLayoutManager = new LinearLayoutManager(this);
         rightMenuLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rightMenuRecyclerView.setLayoutManager(rightMenuLayoutManager);
 
-        LinearLayoutManager bottomMenuLayoutManager = new LinearLayoutManager(this);
-        bottomMenuLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        bottomMenuRecyclerView.setLayoutManager(bottomMenuLayoutManager);
+        rightMenuRecyclerView.setAdapter(rightMenuRecyclerViewAdapter);
 
-        bottomMenuRecyclerView.setCallback(new Callback() {
+        bottomMenuRecyclerViewAdapter = new BottomMenuRecyclerViewAdapter(this, uid, BottomMenuRecyclerViewAdapter.MAIN_ACTIVITY,  new Callback() {
             @Override
             public void OnCallback(Object object) {
-                MotionEvent refinedMotionEvent = (MotionEvent) object;
-                touchLinearLayout.dispatchTouchEvent(refinedMotionEvent);
+                MotionEvent me = (MotionEvent) object;
+                Log.e(TAG, "rearLinearLayout: dispatchTouchEvent: " + me.toString());
+                bottomRearLinearLayout.dispatchTouchEvent((MotionEvent) object);
             }
         });
 
-        rightMenuRecyclerView.setAdapter(rightMenuRecyclerViewAdapter);
-        bottomMenuRecyclerView.setAdapter(bottomMenuRecyclerViewAdapter);
+        viewPager.setOrientation(ViewPager2.ORIENTATION_VERTICAL);
+        viewPager.setAdapter(bottomMenuRecyclerViewAdapter);
+
+        viewPager.setClipToPadding(false);
+        viewPager.setClipChildren(false);
+        viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        viewPager.setOffscreenPageLimit(2);
+
+        /*
+        Log.e(TAG, "ViewPager: childAt(0): " + viewPager.getChildAt(0).toString());
+        RecyclerView LABRecyclerView = (RecyclerView) viewPager.getChildAt(0);
+        viewPager.setOnGenericMotionListener(new View.OnGenericMotionListener() {
+            @Override
+            public boolean onGenericMotion(View v, MotionEvent event) {
+                Log.e(TAG, "View: " + v.toString() + "\nMotionEvent: " + event.toString());
+                return false;
+            }
+        });
+        viewPager.setMotionEventSplittingEnabled(false);
+
+         */
+
+
+        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+        compositePageTransformer.addTransformer(new MarginPageTransformer(40));
+        compositePageTransformer.addTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                if (position < 0) {
+                    // 페이지가 왼쪽으로 스크롤될 때
+                    page.setTranslationY(-80f * position);
+                } else if (position <= 1) {
+                    // 페이지가 오른쪽으로 스크롤될 때
+                    page.setTranslationY(-80f * position);
+                } else {
+                    // 페이지가 정중앙에 있을 때
+                    page.setTranslationY(0);
+                }
+            }
+        });
+
+        viewPager.setPageTransformer(compositePageTransformer);
 
         redButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -327,13 +339,12 @@ public class MainActivity extends AppCompatActivity {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-
                 Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
                 downloadStatusTextView.setText("downloading...");
                 downloadStatusImageView.setVisibility(View.VISIBLE);
                 downloadStatusImageView.startAnimation(animation);
-
                 try {
+                    // add permission true condition
                     SelectQuery selectQuery = SelectQuery.builder()
                             .tableName(RdsConnect.TABLE_SENTENCES).optionField("uid").option("'" + uid + "'")
                             .build();
@@ -425,7 +436,7 @@ public class MainActivity extends AppCompatActivity {
                 String[] in = ing.split(",");
                 int start = Integer.parseInt(in[0]);
                 int end = Integer.parseInt(in[1]);
-                span.setSpan(new ForegroundColorSpan(Color.parseColor("#FFBD12")), start, end+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                span.setSpan(new ForegroundColorSpan(Color.parseColor("#FF6868")), start, end+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             indexTextView.setText("#" + String.valueOf(progress+2) + " sentence of "+String.valueOf(numSentences));
             rightMenuRecyclerViewAdapter.setCheatSheet(target.cheat_sheet);

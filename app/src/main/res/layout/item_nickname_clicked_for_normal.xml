@@ -8,7 +8,7 @@
     android:orientation="horizontal">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/itemNicknameCardView"
+        android:id="@+id/itemNicknameClickedCardView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
@@ -17,7 +17,7 @@
         android:layout_marginBottom="2dp"
         app:contentPadding="1dp"
         app:cardCornerRadius="10dp"
-        app:cardBackgroundColor="@color/character_color">
+        app:cardBackgroundColor="@color/red">
 
         <androidx.cardview.widget.CardView
             android:layout_width="wrap_content"
@@ -27,16 +27,29 @@
             app:cardBackgroundColor="@color/blue">
 
             <TextView
-                android:id="@+id/itemNicknameTextView"
+                android:id="@+id/itemNicknameClickedTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
-                android:textColor="@color/character_color"
+                android:textColor="@color/red"
                 android:textSize="17dp"
                 android:text="Example"
                 android:fontFamily="@font/poppins_light"/>
 
         </androidx.cardview.widget.CardView>
+
     </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/itemNicknameClickedCancelImageView"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:src="@drawable/cancel_mark"
+        android:layout_gravity="bottom"/>
+
+
 </LinearLayout>

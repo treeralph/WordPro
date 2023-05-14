@@ -89,7 +89,7 @@ public class InsertQuery {
         @Override
         public String toString() {
             if(isPermission){
-                return "insert into sentences(sentence, word, word_index, cheat_sheet, path, uid) values('" +
+                return "insert into sentences(sentence, word, word_index, cheat_sheet, path, uid, permission, team_identifier) values('" +
                         sentence + "', '" +
                         word + "', '" +
                         word_index + "', '" +

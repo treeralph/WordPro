@@ -132,105 +132,112 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:splitMotionEvents="true">
+                android:layout_height="match_parent">
 
-                <!-- todo: 이것 까지 바꿨다. 여기서 부터 하면 됩니다. -->
                 <LinearLayout
-                    android:id="@+id/MainActivityTouchLinearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal"
-                    android:clickable="true">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"/>
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/MainActivityBlackButton"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        app:contentPadding="5dp"
-                        app:cardCornerRadius="20dp"
-                        app:cardBackgroundColor="@color/light_blue">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="A"
-                            android:textColor="@color/blue"
-                            android:textSize="30dp"
-                            android:fontFamily="@font/poppins_light"
-                            android:gravity="center"
-                            android:layout_gravity="center"/>
-                    </androidx.cardview.widget.CardView>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"/>
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/MainActivityBlueButton"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        app:contentPadding="5dp"
-                        app:cardCornerRadius="20dp"
-                        app:cardBackgroundColor="@color/light_blue">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="B"
-                            android:textColor="@color/blue"
-                            android:textSize="30dp"
-                            android:fontFamily="@font/poppins_light"
-                            android:gravity="center"
-                            android:layout_gravity="center"/>
-                    </androidx.cardview.widget.CardView>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"/>
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/MainActivityRedButton"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        app:contentPadding="5dp"
-                        app:cardCornerRadius="20dp"
-                        app:cardBackgroundColor="@color/light_blue">
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="C"
-                            android:textColor="@color/blue"
-                            android:textSize="30dp"
-                            android:fontFamily="@font/poppins_light"
-                            android:gravity="center"
-                            android:layout_gravity="center"/>
-                    </androidx.cardview.widget.CardView>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"/>
-
-                </LinearLayout>
-
-                <com.example.wordpro.view.BottomMenuRecyclerView
-                    android:id="@+id/MainActivityBottomMenuRecyclerView"
+                    android:id="@+id/MainActivityBottomRearLinearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    android:clickable="true"/>
+                    android:orientation="vertical">
 
+                    <LinearLayout
+                        android:id="@+id/MainActivityTouchLinearLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/MainActivityBlackButton"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            app:contentPadding="5dp"
+                            app:cardCornerRadius="20dp"
+                            app:cardBackgroundColor="@color/light_blue">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="A"
+                                android:textColor="@color/blue"
+                                android:textSize="30dp"
+                                android:fontFamily="@font/poppins_light"
+                                android:gravity="center"
+                                android:layout_gravity="center"/>
+                        </androidx.cardview.widget.CardView>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/MainActivityBlueButton"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            app:contentPadding="5dp"
+                            app:cardCornerRadius="20dp"
+                            app:cardBackgroundColor="@color/light_blue">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="B"
+                                android:textColor="@color/blue"
+                                android:textSize="30dp"
+                                android:fontFamily="@font/poppins_light"
+                                android:gravity="center"
+                                android:layout_gravity="center"/>
+                        </androidx.cardview.widget.CardView>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/MainActivityRedButton"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            app:contentPadding="5dp"
+                            app:cardCornerRadius="20dp"
+                            app:cardBackgroundColor="@color/light_blue">
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="C"
+                                android:textColor="@color/blue"
+                                android:textSize="30dp"
+                                android:fontFamily="@font/poppins_light"
+                                android:gravity="center"
+                                android:layout_gravity="center"/>
+                        </androidx.cardview.widget.CardView>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"/>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <androidx.viewpager2.widget.ViewPager2
+                        android:id="@+id/MainActivityBottomMenuViewPager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:nestedScrollingEnabled="true"/>
+
+                </LinearLayout>
             </FrameLayout>
         </LinearLayout>
     </LinearLayout>

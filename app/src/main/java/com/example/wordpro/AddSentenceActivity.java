@@ -84,13 +84,10 @@ public class AddSentenceActivity extends AppCompatActivity {
 
                 switch(position){
                     case 0:
-                        viewPager.setUserInputEnabled(false);
                         adapter.getEditText1().requestFocus();
                         break;
                     case 1:
                         adapter.notifyDataSetChanged();
-                        viewPager.setUserInputEnabled(true);
-
                         break;
                     case 2:
                         adapter.getEditText2().requestFocus();
@@ -103,6 +100,7 @@ public class AddSentenceActivity extends AppCompatActivity {
             }
         });
 
+        viewPager.setUserInputEnabled(false);
         viewPager.setAdapter(adapter);
         indicator.attachTo(viewPager);
     }

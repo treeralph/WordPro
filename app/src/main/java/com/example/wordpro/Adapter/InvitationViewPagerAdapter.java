@@ -1,6 +1,7 @@
 package com.example.wordpro.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Message;
 import android.text.Layout;
 import android.util.Log;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.wordpro.MainActivity;
 import com.example.wordpro.R;
 import com.example.wordpro.database.AppDatabase;
 import com.example.wordpro.database.TeamStudy;

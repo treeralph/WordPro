@@ -73,17 +73,16 @@
                 android:background="@color/transparent"/>
 
             <LinearLayout
+                android:id="@+id/teamListActivityBottomLinearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <com.example.wordpro.view.BottomMenuRecyclerView
-                    android:id="@+id/teamListActivityBottomMenuRecyclerView"
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/teamListActivityViewPager"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="10dp"
-                    tools:listitem="@layout/item_bottom_menu_for_team_list_activity"/>
+                    android:layout_height="match_parent"/>
             </LinearLayout>
 
 

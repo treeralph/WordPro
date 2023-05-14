@@ -33,6 +33,8 @@ import java.util.Map;
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     public static String TAG = MyFirebaseMessagingService.class.getName();
+    public Cognito cognito = new Cognito(getApplicationContext());
+    public AppDatabase db = AppDatabase.getDBInstance(getApplicationContext());
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage message) {
@@ -53,21 +55,32 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Map<String, String> payload = message.getData();
         String wFCM = payload.get("wFCM");
+
         if(wFCM.equals("INVITE_TEAM")){
             String teamIdentifier = payload.get("team_identifier");
             String teamName = payload.get("team_name");
             String teamRequestUser = payload.get("make_team_request_user");
             String now = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+            String num_sentence = payload.get("num_sentence");
 
-            TeamStudy teamStudy = new TeamStudy();
-            teamStudy.db_identifier = teamIdentifier;
-            teamStudy.team_study_name = teamName;
-            teamStudy.permission_download = "false";
-            teamStudy.register_day = now;
-            teamStudy.make_team_request_user = teamRequestUser;
+            cognito.getCurrentUserNickname(new Callback() {
+                @Override
+                public void OnCallback(Object object) {
+                    String uid = (String) object;
 
-            AppDatabase db = AppDatabase.getDBInstance(this);
-            db.teamStudyDao().insertTeamStudy(teamStudy);
+                    TeamStudy teamStudy = new TeamStudy();
+                    teamStudy.db_identifier = teamIdentifier;
+                    teamStudy.team_study_name = teamName;
+                    teamStudy.register_day = now;
+                    teamStudy.make_team_request_user = teamRequestUser;
+                    teamStudy.num_sentence = Integer.parseInt(num_sentence);
+
+                    if(uid == teamRequestUser){ teamStudy.permission_download = "true"; }
+                    else{ teamStudy.permission_download = "false"; }
+
+                    db.teamStudyDao().insertTeamStudy(teamStudy);
+                }
+            });
         }else{
 
         }

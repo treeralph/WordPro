@@ -18,8 +18,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.wordpro.database.AppDatabase;
+import com.example.wordpro.database.TeamStudy;
 import com.example.wordpro.tool.Callback;
 import com.example.wordpro.tool.Cognito;
+
+import java.util.List;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -82,10 +86,32 @@ public class SignInActivity extends AppCompatActivity {
                     public void OnCallback(Object object) {
                         // SignInSuccess
                         String uid = (String) object;
-                        Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                        intent.putExtra("uid", uid);
-                        startActivity(intent);
-                        finish();
+
+                        /**
+                         * 기존 코드
+                         *
+                         * Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                         * intent.putExtra("uid", uid);
+                         * startActivity(intent);
+                         * finish();
+                         *
+                         */
+
+                        AppDatabase db = AppDatabase.getDBInstance(getApplicationContext());
+                        List<TeamStudy> teamStudies = db.teamStudyDao().getTeamStudiesPermissionFalse();
+                        if(teamStudies.size() > 0){
+                            // There are new team studies
+                            Intent intent = new Intent(SignInActivity.this, InviteActivity.class);
+                            intent.putExtra("uid", uid);
+                            startActivity(intent);
+                            finish();
+                        }else{
+                            // There is no team study
+                            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                            intent.putExtra("uid", uid);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
                 }, new Callback() {
                     @Override

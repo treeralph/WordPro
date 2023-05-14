@@ -21,16 +21,31 @@ public class EC2RESTApi {
 
     public static void makeTeamAPI(String team_name, List<String> users, List<String> sql_queries, String uid, Callback callback){
 
+        Log.e(TAG, "Team Name: " + team_name);
+        Log.e(TAG, "users: " + users.toString());
+        Log.e(TAG, "sql_queries: " + sql_queries.toString());
+        Log.e(TAG, "uid: " + uid);
+
         String makeTeamQuery = API + "/team/make";
         Log.d(TAG, "EC2RESTApi makeTeam API make method called");
         try {
             BufferedReader bufferedReader;
             StringBuilder stringBuilder = new StringBuilder();
 
+            JSONObject jsonQueries = new JSONObject();
+            for(int i=0; i<sql_queries.size(); i++){
+                jsonQueries.put(String.valueOf(i), sql_queries.get(i));
+            }
+
+            JSONObject jsonNicknames = new JSONObject();
+            for(int i=0; i<users.size(); i++){
+                jsonNicknames.put(String.valueOf(i), users.get(i));
+            }
+
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("team_name", team_name);
-            jsonObject.put("sql_queries", sql_queries);
-            jsonObject.put("users", users);
+            jsonObject.put("sql_queries", jsonQueries);
+            jsonObject.put("users", jsonNicknames);
             jsonObject.put("make_team_request_user", uid);
 
             String json = jsonObject.toString();

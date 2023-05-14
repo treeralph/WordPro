@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.CompositePageTransformer;
+import androidx.viewpager2.widget.MarginPageTransformer;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
@@ -36,16 +39,17 @@ public class TeamListActivity extends AppCompatActivity {
     public String TAG = TeamListActivity.class.getName();
 
     LinearLayout behindLinearLayout;
+    LinearLayout bottomLinearLayout;
     CardView touchCardView;
     RecyclerView recyclerView;
     TeamListRecyclerViewAdapter adapter;
 
-    BottomMenuRecyclerView belowRecyclerView;
-    BottomMenuRecyclerViewAdapter bottomAdapter;
-
     AppDatabase db;
     List<TeamStudy> teamStudies;
     String uid;
+
+    ViewPager2 viewPager;
+    BottomMenuRecyclerViewAdapter bottomMenuRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +65,10 @@ public class TeamListActivity extends AppCompatActivity {
     public void activityViewInitializer(){
 
         behindLinearLayout = findViewById(R.id.teamListActivityBehindLinearLayout);
+        bottomLinearLayout = findViewById(R.id.teamListActivityBottomLinearLayout);
         touchCardView = findViewById(R.id.teamListActivityCardView);
         recyclerView = findViewById(R.id.teamListActivityRecyclerView);
+        viewPager = findViewById(R.id.teamListActivityViewPager);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -71,39 +77,74 @@ public class TeamListActivity extends AppCompatActivity {
         adapter = new TeamListRecyclerViewAdapter(this, teamStudies);
         recyclerView.setAdapter(adapter);
 
-        belowRecyclerView = findViewById(R.id.teamListActivityBottomMenuRecyclerView);
-        LinearLayoutManager bottomLinearLayoutManager = new LinearLayoutManager(this);
-        bottomLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        belowRecyclerView.setLayoutManager(bottomLinearLayoutManager);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
 
-        belowRecyclerView.setCallback(new Callback() {
+        bottomMenuRecyclerViewAdapter = new BottomMenuRecyclerViewAdapter(this, uid, BottomMenuRecyclerViewAdapter.TEAM_LIST_ACTIVITY,  new Callback() {
             @Override
             public void OnCallback(Object object) {
-                // recyclerView dispatchMotionEvent
-                MotionEvent refinedMotionEvent = (MotionEvent) object;
-                behindLinearLayout.dispatchTouchEvent(refinedMotionEvent);
+                MotionEvent me = (MotionEvent) object;
+                Log.e(TAG, "rearLinearLayout: dispatchTouchEvent: " + me.toString());
+
+                float refinedY = me.getY() + bottomLinearLayout.getY();
+                me.setLocation(me.getX(), refinedY);
+                Log.e(TAG, "rearLinearLayout: dispatchTouchEvent: refined: " + me.toString());
+                Log.e(TAG, "rearLinearLayout: dispatchTouchEvent: height: " + height);
+
+
+                behindLinearLayout.dispatchTouchEvent(me);
             }
         });
 
-        bottomAdapter = new BottomMenuRecyclerViewAdapter(this, BottomMenuRecyclerViewAdapter.TEAM_LIST_ACTIVITY, new Callback() {
+        viewPager.setOrientation(ViewPager2.ORIENTATION_VERTICAL);
+        viewPager.setAdapter(bottomMenuRecyclerViewAdapter);
+
+        viewPager.setClipToPadding(false);
+        viewPager.setClipChildren(false);
+        viewPager.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        viewPager.setOffscreenPageLimit(2);
+
+        /*
+        Log.e(TAG, "ViewPager: childAt(0): " + viewPager.getChildAt(0).toString());
+        RecyclerView LABRecyclerView = (RecyclerView) viewPager.getChildAt(0);
+        viewPager.setOnGenericMotionListener(new View.OnGenericMotionListener() {
             @Override
-            public void OnCallback(Object object) {
-                RelativeLayout relativeLayout = (RelativeLayout) object;
-
-                DisplayMetrics displayMetrics = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-                int height = displayMetrics.heightPixels;
-                int width = displayMetrics.widthPixels;
-
-                Log.e(TAG, "TeamListActivity getHeight: " + String.valueOf(height));
-
-                relativeLayout.getLayoutParams().height = (height/5-10) - 120;
-
-                Log.e(TAG, "TeamListActivity getLayoutParams().height: " + relativeLayout.getLayoutParams().height);
+            public boolean onGenericMotion(View v, MotionEvent event) {
+                Log.e(TAG, "View: " + v.toString() + "\nMotionEvent: " + event.toString());
+                return false;
             }
         });
 
-        belowRecyclerView.setAdapter(bottomAdapter);
+        viewPager.setMotionEventSplittingEnabled(false);
+
+         */
+
+
+        CompositePageTransformer compositePageTransformer = new CompositePageTransformer();
+        compositePageTransformer.addTransformer(new MarginPageTransformer(40));
+        compositePageTransformer.addTransformer(new ViewPager2.PageTransformer() {
+            @Override
+            public void transformPage(@NonNull View page, float position) {
+                if (position < 0) {
+                    // 페이지가 왼쪽으로 스크롤될 때
+                    page.setTranslationY(-80f * position);
+                } else if (position <= 1) {
+                    // 페이지가 오른쪽으로 스크롤될 때
+                    page.setTranslationY(-80f * position);
+                } else {
+                    // 페이지가 정중앙에 있을 때
+                    page.setTranslationY(0);
+                }
+            }
+        });
+
+        viewPager.setPageTransformer(compositePageTransformer);
+
+
+
+
 
     }
 

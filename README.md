@@ -9,5 +9,7 @@ AWS EC2를 사용하고 있으며 Docker를 통해서 MySQL, Apache, Node.js 이
 모바일 Push Message를 위해서는 FCM을 사용하였습니다.
 
 모바일 엑티비티 페이지는 다음과 같습니다. 추가적으로 다른 웹페이지는 WordPro.xd를 참고하시면 됩니다.
+
+
 <img width="300" alt="image" src="https://github.com/treeralph/WordPro/assets/50291395/1ce46cf5-db39-4937-87e0-ba3cd33021c2">
 
